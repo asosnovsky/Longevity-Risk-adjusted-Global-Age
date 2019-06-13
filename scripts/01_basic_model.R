@@ -19,7 +19,6 @@ x = 35:95
 dataset %>% 
   # limit the data to be between the ages of 35 to 95
   filter( Age %in% paste0(x) ) %>% 
-  #filter( StatName == "Female" ) %>%
   group_by(Country, StatName) %>% nest %>%  
   # Run the following on each country/gender combination
   mutate(
