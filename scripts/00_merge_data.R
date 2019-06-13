@@ -4,13 +4,6 @@ library(tidyverse)
 
 data_path = "./data/00_raw/death_rates/Mx_1x1"
 
-data <- read_table2(paste0(data_path, '/AUS.Mx_1x1.txt'), skip=1, col_types = cols(
-  Year = col_integer(),
-  Age = col_character(),
-  .default = col_double()
-), na='.')
-
-
 dataset = lapply(dir(data_path), function(file_name) {
   read_table2(paste0(data_path, "/", file_name),
     col_types = cols(
