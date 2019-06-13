@@ -103,15 +103,21 @@ Stage01_results %>% ungroup() %>%
   group_by(Gender) %>% nest %>% 
   mutate(
     # Run the second regression
-    model = map(data, ~lm(lnh~g, data=.)),
+    model = map(data, ~summary(lm(lnh~g, data=.))),
     # Extract parameters and statistics
     data = map2(data, model, ~data_frame(
       L = .y$coefficients[1],
+      `L Std.Err` = .y$coefficients[1,2],
+      `L t-val` = .y$coefficients[1,3],
       `x*` = -.y$coefficients[2],
+      `-x* Std.Err` = .y$coefficients[2,2],
+      `-x* t-val` = .y$coefficients[2,3],
       g_mean = mean(.x$g),
       g_min = min(.x$g),
       g_max = max(.x$g),
-      `Adj. R2` = summary(.y)$adj.r.squared,
+      lambda_min = min(.x$lambda_makeham),
+      lambda_max = max(.x$lambda_makeham),
+      `Adj. R2` = .y$adj.r.squared,
       N = nrow(.x)
     ))
   ) %>% unnest(data) ->
@@ -121,8 +127,28 @@ Stage01_results %>% ungroup() %>%
 # Stage Two - View and Save Results
 #################################################
 Stage02_results %>% ungroup() %>% 
-  select(-model) ->
-  Table2
+  select(-model) %>% 
+  mutate(
+    `Adj. R2` = percent(`Adj. R2`, acc =0.01),
+    `Range: g` = paste0("(", percent(g_min), ', ', percent(g_max), ')' ),
+    `Plateau: λ*` = paste0("(", round(lambda_min, 4), ', ', round(lambda_max, 4), ')' ),
+  ) %>% 
+  mutate_if(is.numeric, ~round(., 2)) %>% 
+  select(
+    Gender,
+    L , `x*`,
+    `L Std.Err`, `-x* Std.Err`, 
+    `L t-val` , `-x* t-val`,
+    `Adj. R2`,
+    `Range: g`,
+    g_mean,
+    `Plateau: λ*`,
+    N
+  ) %>% 
+  rename(`Average: g` = g_mean, Countries = N) %>% 
+  gather(`Statistic`, v, -Gender) %>% 
+  group_by(Statistic) %>% 
+  spread(Gender, v) -> Table2
 
 Table2 %>% View("Table - 2 -")
 Table2 %>% write_csv("data/02_paper_tables/Table-02.csv")
