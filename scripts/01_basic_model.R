@@ -25,6 +25,9 @@ dataset = read_csv("./data/01_processed/2011_qx_data.csv",
 lambda_multiplier = 10^5
 epsilon = 1E-10
 
+# Helper Functions
+lmb_format = function(l) paste0(round(l*lambda_multiplier), "x10^-", log10(lambda_multiplier))
+
 #################################################
 # Stage One - Estimating Sub-Group Parameters
 #################################################
@@ -58,6 +61,9 @@ dataset %>% rename(qx = Value, x = Age, Gender = StatName) %>%
   mutate(
     lambda_0 = map_dbl(data, ~.$lambda[1]),
     lambda_55 = map_dbl(data, ~.$lambda[56]),
+    lambda_min = map_dbl(data, ~min(.$lambda)),
+    lambda_mean = map_dbl(data, ~mean(.$lambda)),
+    lambda_max = map_dbl(data, ~max(.$lambda)),
     lambda_makeham = map_dbl(model, ~.$lambda_makeham),
     K0 = map_dbl(model, ~.$model$coefficients[1]),
     g = map_dbl(model, ~.$model$coefficients[2]),
@@ -68,88 +74,81 @@ dataset %>% rename(qx = Value, x = Age, Gender = StatName) %>%
   Stage01_results
 
 #################################################
-# Stage One - View and Save Results
-#################################################
-# Take a look at  Table - 1
-Stage01_results %>% ungroup() %>% 
-  left_join(read_csv("./data/01_processed/country_codes.csv")) %>% 
-  arrange(Gender, Country) %>%
-  mutate(
-    `λ_0` = paste0(round(lambda_0*lambda_multiplier), "x10^-", log10(lambda_multiplier)),
-    `Makeham: λ` = paste0(round(lambda_makeham*lambda_multiplier), "x10^-", log10(lambda_multiplier)),
-    `λ_55` = percent(lambda_55, acc=0.01),
-    g = percent(g, accuracy = 0.01),
-    m = round(m, 2),
-    b = round(b, 2),
-    lnh = round(lnh, 3)
-  ) %>% 
-  select(
-    Gender, `Country Name`,
-    lnh, `λ_0`, `Makeham: λ`, g, `λ_55`, 
-    m, b
-  ) -> 
-  Table1
-
-Table1 %>% View("Table - 1 -")
-Table1 %>% write_csv("data/02_paper_tables/Table-01.csv")
-
-#################################################
 # Stage Two - CLaM
 #################################################
+# Setup a function for the continous mortality (equation 15)
+lxg = function(x, g, xx, lmd, lmd_m) ifelse(x < xx , lmd + (lmd_m-lmd)*exp(g*(x-xx)), lmd_m )
+# Compute Global parameters
 Stage01_results %>% ungroup() %>%
-  # Drop the columns with model and lambdas
-  select(-c(model, data, lambdas_makeham)) %>% 
   # Group by gender
   group_by(Gender) %>% nest %>% 
   mutate(
     # Run the second regression
     model = map(data, ~summary(lm(lnh~g, data=.))),
     # Extract parameters and statistics
-    data = map2(data, model, ~data_frame(
-      L = .y$coefficients[1],
-      `L Std.Err` = .y$coefficients[1,2],
-      `L t-val` = .y$coefficients[1,3],
-      `x*` = -.y$coefficients[2],
-      `-x* Std.Err` = .y$coefficients[2,2],
-      `-x* t-val` = .y$coefficients[2,3],
-      g_mean = mean(.x$g),
-      g_min = min(.x$g),
-      g_max = max(.x$g),
-      lambda_min = min(.x$lambda_makeham),
-      lambda_max = max(.x$lambda_makeham),
-      `Adj. R2` = .y$adj.r.squared,
-      N = nrow(.x)
+    parameters = map(model, ~data_frame(
+      L = .$coefficients[1],
+      `x*` = -.$coefficients[2],
+      adj.r.squared = .$adj.r.squared
+    )),
+    data = map2(data, parameters, ~.x %>% group_by(Country) %>% mutate(
+      lxg = map(data, function(d) lxg(
+        x = 35:95,
+        xx = .y$`x*`,
+        lmd_m = lambda_makeham,
+        lmd = d$lambda,
+        g = g
+      ))
     ))
-  ) %>% unnest(data) ->
+  ) %>% 
+  unnest(parameters) ->
   Stage02_results
 
-#################################################
-# Stage Two - View and Save Results
-#################################################
-Stage02_results %>% ungroup() %>% 
-  select(-model) %>% 
-  mutate(
-    `Adj. R2` = percent(`Adj. R2`, acc =0.01),
-    `Range: g` = paste0("(", percent(g_min), ', ', percent(g_max), ')' ),
-    `Plateau: λ*` = paste0("(", round(lambda_min, 4), ', ', round(lambda_max, 4), ')' ),
-  ) %>% 
-  mutate_if(is.numeric, ~round(., 2)) %>% 
-  select(
-    Gender,
-    L , `x*`,
-    `L Std.Err`, `-x* Std.Err`, 
-    `L t-val` , `-x* t-val`,
-    `Adj. R2`,
-    `Range: g`,
-    g_mean,
-    `Plateau: λ*`,
-    N
-  ) %>% 
-  rename(`Average: g` = g_mean, Countries = N) %>% 
-  gather(`Statistic`, v, -Gender) %>% 
-  group_by(Statistic) %>% 
-  spread(Gender, v) -> Table2
 
-Table2 %>% View("Table - 2 -")
+
+#################################################
+# Save Results
+#################################################
+# Take a look at  Table - 1
+Stage02_results %>% 
+  select(Gender, data) %>% unnest(data) %>% 
+  left_join(read_csv("./data/01_processed/country_codes.csv")) %>% 
+  group_by(Gender, `Country Name`) %>% 
+  summarise(
+    `λ_0` = unique(lambda_0) %>% lmb_format(),
+    `Makeham: λ` = lambda_makeham %>% lmb_format,
+    `λ_55` = unique(lambda_55),
+    g = percent(g, accuracy = 0.01),
+    m = round(m, 2),
+    b = round(b, 2),
+    lnh = round(lnh, 3)
+  ) -> 
+  Table1
+
+#Table1 %>% View("Table - 1 -")
+Table1 %>% write_csv("data/02_paper_tables/Table-01.csv")
+
+# Take a look at  Table - 2
+Stage02_results %>% ungroup() %>% 
+  mutate(
+    `Adj. R2` = adj.r.squared %>% percent(acc =0.01),
+    `Range: g` = map_chr(data, ~paste0("(", percent(min(.$g)), ', ', percent(max(.$g)), ')' )),
+    `Plateau: λ*` = map_chr(data, ~paste0("(", min(.$lambda_min), ', ', round(max(.$lambda_max), 2), ')' )),
+    `Average: g` = map_dbl(data, ~mean(.$lambda_mean)),
+    Countries = map_dbl(data, nrow)
+  ) %>% 
+  mutate(
+    params = map(model, ~data_frame(
+      `L Std.Err` = .$coefficients[1,2],
+      `-x* Std.Err` = .$coefficients[2,2],
+      `L t-value` = .$coefficients[1,3],
+      `-x* t-value` = .$coefficients[2,3],
+    ))
+  ) %>% unnest(params) %>% 
+  mutate_if(is.numeric, ~round(., 2)) %>% 
+  select(-data, -model) -> 
+  Table2
+
+#Table2 %>% View("Table - 2 -")
 Table2 %>% write_csv("data/02_paper_tables/Table-02.csv")
   
