@@ -1,0 +1,82 @@
+---
+title: "02_Plots"
+output:
+  html_document:
+    df_print: paged
+---
+
+
+```{r, load data}
+# Set the seed for any future randomization needs
+set.seed(0)
+
+# Load used libraries
+library(readr)
+library(tidyverse)
+
+# Read in the modelled data
+Stage1_model <- read_rds("../data/02_models/stage1.rds")
+Stage2_model <- read_rds("../data/02_models/stage2.rds")
+Stage3_model <- read_rds("../data/02_models/stage3.rds")
+dataset = read_csv("../data/01_processed/2011_qx_data.csv")
+```
+
+# Figure 1: Visualizing Gompertz and the Compensation Law of Mortality [WIP]
+```{r}
+Stage2_model %>% filter(Gender == "Total") %>% unnest(data) %>% 
+  select(Country, `x*`, l_m, lnh, g, data) %>% unnest(data) %>% 
+  mutate(
+    lxi = ifelse(Age >= `x*`, l_m, l + exp(lnh + g*Age))
+  ) -> fig1_data
+ggplot() +
+  geom_line(aes(x=Age, y=log(lxi), group=Country), data=fig1_data, linetype="dotted") + 
+  geom_line(
+    aes(x=Age, y=log(lxi)),
+    color='blue',
+    data=fig1_data %>% group_by(Age) %>% 
+    summarise(
+      l_m = mean(l_m),
+      l = mean(l),
+      g = mean(g),
+      h = mean(exp(lnh)),
+      `x*` = mean(`x*`)
+    ) %>% 
+    mutate(
+      lxi = ifelse(Age >= `x*`, l_m, l+h*exp(g*Age))
+    )
+  )
+
+
+```
+
+
+# Figure 2: Raw Mortality Rates Around the World
+```{r}
+dataset %>% filter(StatName == "Total") %>% 
+  mutate(Age = as.numeric(Age)) %>% 
+  filter(between(Age, 35, 95)) %>% 
+  ggplot(aes(
+    x=Age, y=Value
+  )) + 
+  geom_point()
+```
+
+# Figure 3: Evidence of the Compensation Law of Mortality Around the World
+```{r, fig.height=14}
+library(ggstance)
+
+Stage3_model %>% filter(Age == 55) %>% 
+  arrange(-B_Age_Lower) %>% 
+  mutate(
+    Country = as_factor(Country)
+  ) %>% ggplot(aes(
+  )) + facet_wrap(~Gender, nrow=3) +
+  geom_crossbarh(aes(
+    y = Country,
+    xmin = B_Age_Lower,
+    xmax = B_Age_Upper,
+    x = B_Age
+  ), fill='#0a0a0a') +
+  geom_vline(xintercept = 55, linetype="dotted")
+
+```
