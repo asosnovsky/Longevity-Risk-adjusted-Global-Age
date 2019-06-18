@@ -21,20 +21,25 @@ country_codes <- read_csv("./data/01_processed/country_codes.csv")
 lambda_multiplier = 10^5
 epsilon = 1E-10
 
+# Helper Format Function
+lmb_format = function(l) paste0(round(l*lambda_multiplier), "x10^-", log10(lambda_multiplier))
+
 # Table 1
 Stage1_model %>% 
   mutate(
-    l_0 = map_dbl(data, ~.$l[1]),
+    l_0 = map_dbl(data, ~.$l[1]) %>% lmb_format,
     l_55 = map_dbl(data, ~.$l[56]),
     m = (log(g) - lnh)/g,
-    b = 1/g
+    b = 1/g,
+    l_m = lmb_format(l_m)
   ) %>% 
   left_join(country_codes, by="Country") %>% 
   select(
     Gender,
     `Country Name`,
     lnh, l_0, l_m, g, l_55, m, b
-  ) -> Table1
+  ) %>% mutate_if(is.numeric, ~round(., 2)) -> 
+  Table1
 
 for (gender in Stage1_model$Gender %>% unique) {
   Table1 %>% filter( Gender == gender ) %>%
@@ -74,7 +79,8 @@ Stage3_model %>%
   mutate( Age = paste0(Gender, "\n", "x = ", Age) )  %>% 
   left_join(country_codes, by="Country") %>% 
   select(`Country Name`, Age, B_Age) %>% 
-  spread(Age, B_Age) ->
+  spread(Age, B_Age) %>% 
+  mutate_if(is.numeric, ~round(., 2)) ->
   Table3
 
 write_csv(Table3, "./data/02_paper_tables/table3.csv")
