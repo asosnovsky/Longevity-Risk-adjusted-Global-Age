@@ -12,13 +12,13 @@ library(scales)
 
 # Read in the merged dataset for 2011
 dataset = read_csv("./data/01_processed/2011_qx_data.csv", 
-                   col_types = cols(
-                     Year = col_integer(),
-                     Age = col_integer(), # note that this includes a value of "110+", this value is not used at the moment
-                     Country = col_character(),
-                     StatName = col_character(),
-                     .default = col_double()
-                   )
+   col_types = cols(
+       Year = col_integer(),
+       Age = col_integer(), # note that this includes a value of "110+", this value is not used at the moment
+       Country = col_character(),
+       StatName = col_character(),
+       .default = col_double()
+     )
 )
 
 
@@ -34,20 +34,19 @@ dataset %>% rename(Gender=StatName, qx=Value) %>%
   filter(between(Age, 35, 95)) %>% 
   # Generate initial lambda values
   mutate( l = log(1/(1-qx)) ) %>%
-  # Group by Country and Gender, so that we may run the operations
-  #   on each of the sub-groups
+  # Group by Country and Gender, so that we may run the operations on each of the sub-groups
   group_by(Country, Gender) %>% nest() %>% 
   mutate(
     model = map(data, function(data) lapply(
       # Create a sequence of potential accidental death lambdas
       seq(from=0, to=min(data$l), by=1/lambda_multiplier), 
-      function(lm) list(
+      function(l_m) list(
         # Fit a linear-regression model for each acc-death lambda per sub-group
         model = lm(y~x, data=data_frame(
-          y = log(data$l-lm+epsilon),
+          y = log(data$l-l_m+epsilon),
           x = data$Age
         )), 
-        lm = lm
+        l_m = l_m
         # Only keep the best model per sub-group
       )) %>% reduce(function(l, r) {
         if( sigma(l$model) < sigma(r$model) ) l
@@ -59,7 +58,7 @@ dataset %>% rename(Gender=StatName, qx=Value) %>%
   mutate(
     K0 = map_dbl(model, ~.$model$coefficients[1]),
     K1 = map_dbl(model, ~.$model$coefficients[2]),
-    l_m = map_dbl(model, ~.$lm),
+    l_m = map_dbl(model, ~.$l_m),
     g = K1,
     lnh = K0 - log( exp(K1-1)/K1 )
   ) -> Stage1_model
