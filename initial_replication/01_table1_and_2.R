@@ -60,8 +60,10 @@ table1 %>% filter(Gender == "F") %>% select(-Gender) %>%
   write_csv("./initial_replication/01_table1b.csv")
 
 # Save averages
-table1 %>% group_by(Gender) %>% 
+stage1_model %>% group_by(Gender) %>% 
   summarise_if(is.numeric, mean) %>% 
+  mutate( g = g %>% percent ) %>% 
+  mutate_if(is.numeric, ~round(., 3)) %>% 
   write_csv("./initial_replication/01_table1-averages.csv")
 
 ##########################
