@@ -1,0 +1,48 @@
+---
+title: "Testing Makeham at zero"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+# Load Dataset
+```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(readr)
+library(readxl)
+library(knitr)
+source("../scripts/00_method.R")
+
+# Read Data
+cc = read_csv("../initial_replication/manual_coef.csv") %>%  
+  select(Country = m_cc, `Country Name`, M=lmakeham_M, F=lmakeham_F) %>% 
+  gather(Gender, lambda_makeham, -c(Country, `Country Name`))
+World_Mortality_2011 <- read_excel("../initial_replication/World_Mortality_2011.xlsx", skip = 1)
+
+# Mutate dataset to fit modelling (going from flat to narrow table)
+World_Mortality_2011 %>% 
+  gather(Country_Sex, qx, -c(Year, Age)) %>% 
+  separate(Country_Sex, c("Country", "Gender"), '_') -> 
+  narrow_dt
+
+narrow_dt %>% 
+  inner_join(cc, by=c("Country", "Gender")) -> narrow_dt
+%>%
+  #filter(between(Age, 35, 95)) -> 
+  narrow_dt
+```
+
+
+# Original Values
+  
+```{r echo=TRUE}
+narrow_dt %>% filter(Country != "ISL") %>% 
+  compute_stage1 %>% compute_stage2 %>% compute_table2 %>% 
+  kable
+```
+
+# Makeham at 0
+```{r echo=TRUE}
+narrow_dt %>% mutate(lambda_makeham = 0) %>% filter(Country != "ISL") %>%  
+  compute_stage1 %>% compute_stage2 %>% compute_table2 %>% 
+  kable
+```
