@@ -25,9 +25,8 @@ World_Mortality_2011 %>%
   narrow_dt
 
 narrow_dt %>% 
-  inner_join(cc, by=c("Country", "Gender")) -> narrow_dt
-%>%
-  #filter(between(Age, 35, 95)) -> 
+  inner_join(cc, by=c("Country", "Gender")) %>% 
+  filter(between(Age, 35, 95)) -> 
   narrow_dt
 ```
 

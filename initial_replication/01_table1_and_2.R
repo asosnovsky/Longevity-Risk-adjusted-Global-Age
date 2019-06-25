@@ -20,16 +20,16 @@ World_Mortality_2011 %>%
 ##########################
 #   Table 1 Generation
 ##########################
-# filter to Males between 35 and 95 (replicating table 1a)
-narrow_dt %>% 
-  filter(between(Age, 35, 95)) %>% 
+# filter to between 35 and 95 (replicating table 1)
+narrow_dt %>% filter(between(Age, 35, 95)) %>% 
   # Join the data-set with manually entered coefficients
   inner_join(cc, by=c("Country", "Gender")) %>% 
-  # create lambda values and y's
+  # create lambda values and 'y'
   mutate( 
     l = log(1/(1-qx)),
     y = log(l-(lambda_makeham)*10^-5)  
   ) %>% 
+  # Segment the dataset by country and gender
   group_by(`Country Name`, Gender) %>% nest %>% 
   mutate(
     # Fit model
@@ -43,7 +43,9 @@ narrow_dt %>%
       m = (log(g) - lnh)/g,
       b = 1/g
     ))
-  ) %>% select(-c(data, model)) %>% unnest(params) -> stage1_model
+  ) %>% 
+  select(-c(data, model)) %>% 
+  unnest(params) -> stage1_model
 
 # Format table numbers (make the numbers more presentatble)
 stage1_model %>% 
