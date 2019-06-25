@@ -18,7 +18,7 @@ narrow_dt = read_csv("./data/01_processed/2011_qx_data.csv") %>%
       Gender == "Male" ~ "M",
       Gender == "Female" ~ "F"
     )
-  )
+  ) %>% select(-`Country Name`)
 
 
 ##########################
