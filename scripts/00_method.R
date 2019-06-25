@@ -69,7 +69,7 @@ compute_table2 <- function(stage2_model) stage2_model %>% mutate(params = map(mo
     `7_Range: g` = paste0("(", percent(min(.$g)), ', ', percent(max(.$g)), ')' ),
     `9_Countries` = nrow(.)
   ))) %>% unnest(params) %>% 
-  mutate_if(is.numeric, ~round(., 2)) %>% 
+  mutate_if(is.numeric, ~round(., 3)) %>% 
   rename(
     `0_L` = L,
     `1_x*` = `x*`,
