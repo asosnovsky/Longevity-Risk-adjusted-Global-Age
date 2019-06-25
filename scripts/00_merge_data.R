@@ -17,7 +17,9 @@ dataset = lapply(country_codes$CountryCode, function(ccode) {
   filter( Year == 2011 ) %>% 
   gather(Gender, qx, -c(Country, Year, Age)) %>% 
   mutate(Age = replace(Age, Age == "110+", 110)) %>% 
-  mutate( Age = as.numeric(Age) )
+  mutate( Age = as.numeric(Age) ) %>% 
+  inner_join(country_codes, by=c("Country"="CountryCode")) %>% 
+  rename(`Country Name` = CountryName)
 
 dataset %>% 
   write_csv("./data/01_processed/2011_qx_data.csv")

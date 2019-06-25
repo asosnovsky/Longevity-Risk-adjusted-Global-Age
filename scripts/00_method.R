@@ -1,6 +1,25 @@
 library(scales)
 library(tidyverse)
 
+compute_model1 <- function(dt, lambda_makeham) dt %>% 
+  mutate( y = log(l-lambda_makeham) ) %>% nest %>% 
+  mutate(
+    # Fit model
+    model = map(data, ~summary(lm(y~Age ,data=.))),
+    # Extracts params
+    l_m = lambda_makeham*10E5,
+    params = map(model, ~tibble(
+      K0 = .$coefficients[1],
+      g = .$coefficients[2],
+      lnh = as.numeric(K0-log((exp(g)-1)/g)),
+      m = (log(g) - lnh)/g,
+      b = 1/g,
+      sigma = .$sigma
+    ))
+  ) %>% 
+  select(-c(data, model)) %>% 
+  unnest(params) 
+
 compute_stage1 <- function(narrow_table, qeps=0) narrow_table %>% mutate( 
   l = log(1/(1-qx-qeps)),
   y = log(l-(lambda_makeham)*10^-5)  
