@@ -9,3 +9,5 @@ paper/*.log
 paper/*.gz
 paper/*.csv
 paper/*test*
+paper
+notes*
