@@ -7,7 +7,7 @@ compute_model1 <- function(dt, lambda_makeham) dt %>%
     # Fit model
     model = map(data, ~summary(lm(y~Age ,data=.))),
     # Extracts params
-    l_m = lambda_makeham*10E5,
+    l_m = lambda_makeham,
     params = map(model, ~tibble(
       K0 = .$coefficients[1],
       g = .$coefficients[2],
