@@ -20,7 +20,7 @@ Stage3_model <- read_rds("./data/02_models/stage3.rds")
 lmb_format = function(l) paste0(round(l*lambda_multiplier), "x10^-", log10(lambda_multiplier))
 
 # Table 1
-Stage1_model %>% compute_table1 -> Table1
+Stage1_model %>% mutate( l_m = paste0(l_m*1E5,"x10^-5") ) %>% compute_table1 -> Table1
 
 for (gender in Stage1_model$Gender %>% unique) {
   Table1 %>% filter( Gender == gender ) %>%
