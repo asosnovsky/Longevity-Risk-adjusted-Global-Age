@@ -30,7 +30,7 @@ dataset %>%
   group_by(`Country Name`, Gender) %>% nest %>% 
   mutate(model = map(data, ~lapply( 
     # Create a sequence of potential accidental death lambdas
-    seq(0, min(.$l), by=5E-5),
+    seq(1E-5, min(.$l), by=1E-5),
     # Fit a linear-regression model for each acc-death lambda per sub-group
     function(l_m) compute_model1(., l_m)
   ) %>% reduce(bind_rows))) %>%

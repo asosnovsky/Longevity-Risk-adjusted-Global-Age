@@ -54,7 +54,7 @@ compute_stage2 <- function(stage1_model) stage1_model %>% group_by(Gender) %>% n
 
 
 compute_table1 <- function(stage1_model) stage1_model %>% 
-  mutate( g = g %>% percent ) %>% 
+  mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
   mutate_if(is.numeric, ~round(., 3)) %>% arrange(Gender) %>% 
   select(Gender, `Country Name`, lnh, l_m, g, m, b)
 
