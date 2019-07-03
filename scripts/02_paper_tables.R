@@ -31,16 +31,10 @@ for (gender in Stage1_model$Gender %>% unique) {
 
 # Table 2
 Stage2_model %>% compute_table2 -> Table2
-
 write_csv(Table2, "./data/02_paper_tables/table2.csv")
 
 # Table 3
-Stage3_model %>% 
-  filter( Age %in% c(55, 70, 85) ) %>% 
-  mutate( Age = paste0(Gender, "\n", "x = ", Age) )  %>% 
-  select(`Country Name`, Age, B_Age) %>% 
-  spread(Age, B_Age) %>% 
-  mutate_if(is.numeric, ~round(., 3)) ->
+Stage3_model %>% compute_table3 ->
   Table3
 
 write_csv(Table3, "./data/02_paper_tables/table3.csv")

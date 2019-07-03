@@ -11,3 +11,4 @@ paper/*.csv
 paper/*test*
 paper
 notes*
+reports/Optimization Issues/emp_*

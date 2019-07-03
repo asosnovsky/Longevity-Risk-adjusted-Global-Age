@@ -52,6 +52,22 @@ compute_stage2 <- function(stage1_model) stage1_model %>% group_by(Gender) %>% n
     G = map_dbl(data, ~mean(.$g))
   )
 
+compute_stage3 <- function(stage2_model) stage2_model %>% 
+  mutate(
+    x_stdev = map_dbl(model, ~.$coefficients[2,2]),
+    `x* - higher` = `x*` + 2*x_stdev,
+    `x* - lower` = `x*` - 2*x_stdev,
+  ) %>% 
+  unnest(data) %>% 
+  mutate(
+    ki = (g/G)-1
+  ) %>% unnest(data) %>% 
+  mutate(
+    B_Age = Age - ki*(`x*`-Age),
+    B_Age_Upper = Age - ki*(`x* - higher`-Age),
+    B_Age_Lower = Age - ki*(`x* - lower`-Age)
+  ) -> Stage3_model
+
 
 compute_table1 <- function(stage1_model) stage1_model %>% 
   mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
@@ -80,3 +96,10 @@ compute_table2 <- function(stage2_model) stage2_model %>% mutate(params = map(mo
   spread(Gender, value) %>% 
   separate(stat, c("idx", "Statistic"), sep='_') %>% 
   select(-idx)
+
+compute_table3 <- function(stage3_model) stage3_model %>% 
+  filter( Age %in% c(55, 70, 85) ) %>% 
+  mutate( Age = paste0(Gender, "\n", "x = ", Age) )  %>% 
+  select(`Country Name`, Age, B_Age) %>% 
+  spread(Age, B_Age) %>% 
+  mutate_if(is.numeric, ~round(., 3))

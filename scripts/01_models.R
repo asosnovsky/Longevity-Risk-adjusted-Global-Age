@@ -14,9 +14,7 @@ source("./scripts/00_method.R")
 # Read in the merged dataset for 2011
 dataset = read_csv("./data/01_processed/2011_qx_data.csv") %>% 
   # Remove Iceland as its too much of an outlier
-  filter(
-    !(Country %in% c("ISL"))
-  )
+  filter( !(Country %in% c("ISL")) )
 
 #################################################
 # Stage One - Estimating Sub-Group Parameters
@@ -50,20 +48,6 @@ Stage2_model %>% write_rds("./data/02_models/stage2.rds")
 #################################################
 # Stage Three+Four - Compute B-Age
 #################################################
-Stage2_model %>% 
-  mutate(
-    x_stdev = map_dbl(model, ~.$coefficients[2,2]),
-    `x* - higher` = `x*` + 2*x_stdev,
-    `x* - lower` = `x*` - 2*x_stdev,
-  ) %>% 
-  unnest(data) %>% 
-  mutate(
-    ki = (g/G)-1
-  ) %>% unnest(data) %>% 
-  mutate(
-    B_Age = Age - ki*(`x*`-Age),
-    B_Age_Upper = Age - ki*(`x* - higher`-Age),
-    B_Age_Lower = Age - ki*(`x* - lower`-Age)
-  ) -> Stage3_model
+Stage2_model %>% compute_stage3 -> Stage3_model
 
 Stage3_model %>% write_rds("./data/02_models/stage3.rds")
