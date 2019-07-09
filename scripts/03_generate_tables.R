@@ -128,14 +128,14 @@ table2_latex <- function(Stage2_model) {
     Stage2_model %>% rename(g = G) %>% 
       mutate(g_min = map_dbl(data, ~min(.$g))) %>% 
       mutate(g_max = map_dbl(data, ~max(.$g))) %>% 
-      mutate(l_min = map_dbl(data, ~min(.$l_m))) %>% 
-      mutate(l_max = map_dbl(data, ~max(.$l_m))) %>%
+      mutate(l_min = map_dbl(data, ~min(mutate(., ll=round(exp(lnh+g*95)+l_m, 3))$ll))) %>% 
+      mutate(l_max = map_dbl(data, ~max(mutate(., ll=round(exp(lnh+g*95)+l_m, 3))$ll))) %>%
       mutate(N = map_dbl(data, nrow)) %>% 
       mutate(Radj2 = map_dbl(model, ~.$adj.r.squared*100) %>% number(acc=0.01)) %>% 
       select(-data, -model, -L, -`x*`) %>% 
       mutate_at(vars(starts_with('g', i=F)), ~number(.*100, acc=0.01, suf="\\%")) %>% 
       unite(g_range, g_min, g_max, sep=', ') %>% 
-      mutate_at(vars(starts_with('l', i=F)), ~number(.*1E5, acc=0.001)) %>% 
+      mutate_at(vars(starts_with('l', i=F)), ~number(., acc=0.001)) %>% 
       unite(l_range, l_min, l_max, sep=', '),
     by="Gender"
   ) %>% gather(stat, value, -Gender) %>% 
