@@ -21,8 +21,7 @@ lmb_format = function(l) paste0(round(l*lambda_multiplier), "x10^-", log10(lambd
 
 # Table 1
 Stage1_model %>% mutate( l_m = paste0(l_m*1E5) ) %>% 
-  compute_table1 %>% 
-  rename(`λm (x10^-5)` = l_m ) -> Table1
+  compute_table1 -> Table1
 
 for (gender in Stage1_model$Gender %>% unique) {
   Table1 %>% filter( Gender == gender ) %>%
