@@ -112,15 +112,16 @@ table1_latex <- function(Stage1_model) {
 }
 table2_latex <- function(Stage2_model) {
   
-  tabulate_coef <- function(coef) coef %>% as.data.frame() %>% t %>% as.tibble %>% 
+  tabulate_coef <- function(coef, bold_est=F) coef %>% as.data.frame() %>% t %>% as.tibble %>% 
     mutate_all(~number(., acc=0.001)) %>% 
+    mutate( Estimate = if_else(bold_est, paste0( "{\\bf", Estimate, "}" ), Estimate) ) %>% 
     unite(latex, Estimate, `Std. Error`, `t value`, sep = ' & ')
   
   inner_join(
     Stage2_model %>% select(Gender, model) %>% 
       mutate( coef = map(model, ~bind_rows(
         tabulate_coef(.$coefficient[1,1:3]) %>% mutate(coef="L"),
-        tabulate_coef(.$coefficient[2,1:3]) %>% mutate(coef="x")
+        tabulate_coef(.$coefficient[2,1:3], T) %>% mutate(coef="x")
       )  ) ) %>%
       unnest(coef) %>%
       spread(coef, latex),
@@ -130,9 +131,9 @@ table2_latex <- function(Stage2_model) {
       mutate(l_min = map_dbl(data, ~min(.$l_m))) %>% 
       mutate(l_max = map_dbl(data, ~max(.$l_m))) %>%
       mutate(N = map_dbl(data, nrow)) %>% 
-      mutate(Radj2 = map_dbl(model, ~.$adj.r.squared)) %>% 
+      mutate(Radj2 = map_dbl(model, ~.$adj.r.squared*100) %>% number(acc=0.01)) %>% 
       select(-data, -model, -L, -`x*`) %>% 
-      mutate_at(vars(starts_with('g', i=F)), ~number(.*100, acc=0.001, suf="\\%")) %>% 
+      mutate_at(vars(starts_with('g', i=F)), ~number(.*100, acc=0.01, suf="\\%")) %>% 
       unite(g_range, g_min, g_max, sep=', ') %>% 
       mutate_at(vars(starts_with('l', i=F)), ~number(.*1E5, acc=0.001)) %>% 
       unite(l_range, l_min, l_max, sep=', '),
@@ -158,8 +159,8 @@ table2_latex <- function(Stage2_model) {
     "\\multicolumn{3}{|c|}{",vars$Male_Radj2,"\\%} & ",
     "\\multicolumn{3}{|c||}{",vars$Female_Radj2,"\\%} \\\\ \\hline\n",
     "Range: $g[i]$ & ",
-    "\\multicolumn{3}{|c|}{$(",vars$Male_g,")$} & ",
-    "\\multicolumn{3}{|c||}{$(",vars$Female_g,")$} \\\\ \\hline\n",
+    "\\multicolumn{3}{|c|}{$(",vars$Male_g_range,")$} & ",
+    "\\multicolumn{3}{|c||}{$(",vars$Female_g_range,")$} \\\\ \\hline\n",
     "Average: $g[i]$ & ",
     "\\multicolumn{3}{|c|}{G \\; = \\; $", vars$Male_g, "\\%$} & ",
     "\\multicolumn{3}{|c||}{G \\; = \\; $", vars$Female_g, "\\%$} \\\\ \\hline\n",
