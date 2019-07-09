@@ -1,6 +1,6 @@
 library(ggstance)
 
-dir_save = "reports/Revised\ Tables/"
+dir_save = "images/"
 
 country_codes = read_csv("./data/01_processed/country_codes.csv") %>% 
   rename(`Country Name` = CountryName)
