@@ -5,6 +5,7 @@
  \usepackage{amsfonts}
  \usepackage{amssymb}
  \usepackage{fancyvrb}
+ \usepackage{longtable}
  \usepackage[doublespacing]{setspace}
  \setcounter{MaxMatrixCols}{30}
  \providecommand{\U}[1]{\protect\rule{.1in}{.1in}}
@@ -158,10 +159,17 @@ Plateau (+/-): $\lambda^{*}$ & \multicolumn{3}{|c|}{$ (0.245, 0.411)$} & \multic
 Countries & \multicolumn{3}{|c|}{$N=37$} & \multicolumn{3}{|c||}{$N=37$} \\ \hline
 \end{tabular}\label{tab3}\end{center}Note: These are the results from regressing the (male and female) Gompertz-Makeham (log) mortality intercepts $\ln h[i]$ on the mortality growth rates $g[i]$, from the Human Mortality Database (HMD) for {\em period} mortality in 2011. This is the second phase regression.
 \end{table}
-\clearpage
-\begin{table}
-\begin{center}
-\begin{tabular}{||l|c|c|c|c|c|c||}
+
+
+\clearpage\begin{longtable}{||
+    p{95pt}|
+    p{35pt}|
+    p{35pt}|
+    p{35pt}|
+    p{35pt}|
+    p{35pt}|
+    p{35pt}
+||}
 \hline\hline
 \multicolumn{7}{||c||}{Table \# 3 } \\ \hline\hline
 \multicolumn{7}{||c||}{{\bf Mortality-Adjusted Biological Ages $(\xi)$ Around the World}}\\ \hline\hline
@@ -206,9 +214,5 @@ Countries & \multicolumn{3}{|c|}{$N=37$} & \multicolumn{3}{|c||}{$N=37$} \\ \hli
 {\bf Average:} & {\bf55.00} & {\bf70.00} & {\bf85.00} & {\bf55.00} & {\bf70.00} & {\bf85.00}\\ \hline \hline
 \hline
 \multicolumn{7}{||r||}{{\em Source: Human Mortality Database, Period 2011}} \\ \hline\hline
-\end{tabular}
-\label{tab4}
-\smallskip
-\end{center}
-\end{table}
+\end{longtable}
 \end{document}

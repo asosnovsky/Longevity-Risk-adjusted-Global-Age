@@ -2,7 +2,7 @@ data/00_raw/death_rates
 .Rproj.user
 .RData
 .Rhistory
-reports/**/*.aux
+**.aux
 **.fls
 **.fdb*
 **.log
@@ -11,4 +11,3 @@ reports/**/*.aux
 *test*
 paper
 notes*
-reports/Optimization Issues/emp_*

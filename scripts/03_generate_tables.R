@@ -205,8 +205,16 @@ table3_latex <- function(Stage3_model) {
     inner_table
   
   paste0(
-    "\\clearpage\n", "\\begin{table}\n",
-    "\\begin{center}\n", "\\begin{tabular}{||l|c|c|c|c|c|c||}\n",
+    "\\clearpage",
+    "\\begin{longtable}{||\n",
+    "    p{95pt}|\n",
+    "    p{35pt}|\n",
+    "    p{35pt}|\n",
+    "    p{35pt}|\n",
+    "    p{35pt}|\n",
+    "    p{35pt}|\n",
+    "    p{35pt}\n",
+    "||}\n",
     "\\hline\\hline\n",
     "\\multicolumn{7}{||c||}{Table \\# 3 } \\\\ \\hline\\hline\n",
     "\\multicolumn{7}{||c||}{{\\bf ",
@@ -220,8 +228,7 @@ table3_latex <- function(Stage3_model) {
     "\\hline\n",
     "\\multicolumn{7}{||r||}{{\\em ",
     "Source: Human Mortality Database, Period 2011}} \\\\ \\hline\\hline\n",
-    "\\end{tabular}\n\\label{tab4}\n\\smallskip\n",
-    "\\end{center}\n\\end{table}"
+    "\\end{longtable}"
   ) 
 }
 
@@ -235,6 +242,7 @@ cat(
   "\\usepackage{amsfonts}\n",
   "\\usepackage{amssymb}\n",
   "\\usepackage{fancyvrb}\n",
+  "\\usepackage{longtable}\n",
   "\\usepackage[doublespacing]{setspace}\n",
   "\\setcounter{MaxMatrixCols}{30}\n",
   "\\providecommand{\\U}[1]{\\protect\\rule{.1in}{.1in}}\n",
@@ -266,5 +274,6 @@ cat(
 )
 table1_latex(Stage1_model ) %>% cat(file = out_file, sep="\n\n", append = T)
 table2_latex(Stage2_model ) %>% cat(file = out_file, sep="\n\n", append = T)
+cat("\n\n", file=out_file, append = T)
 table3_latex(Stage3_model ) %>% cat(file = out_file, sep="\n\n", append = T)
 cat("\\end{document}", file=out_file, append = T)
