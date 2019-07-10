@@ -128,8 +128,8 @@ table2_latex <- function(Stage2_model) {
     Stage2_model %>% rename(g = G) %>% 
       mutate(g_min = map_dbl(data, ~min(.$g))) %>% 
       mutate(g_max = map_dbl(data, ~max(.$g))) %>% 
-      mutate(l_min = map_dbl(data, ~min(mutate(., ll=round(exp(lnh+g*95)+l_m, 3))$ll))) %>% 
-      mutate(l_max = map_dbl(data, ~max(mutate(., ll=round(exp(lnh+g*95)+l_m, 3))$ll))) %>%
+      mutate(l_min = map2_dbl(data, `x*`, ~min(mutate(.x, ll=round(exp(lnh+g*.y)+l_m, 3))$ll))) %>% 
+      mutate(l_max = map2_dbl(data, `x*`, ~max(mutate(.x, ll=round(exp(lnh+g*.y)+l_m, 3))$ll))) %>%
       mutate(N = map_dbl(data, nrow)) %>% 
       mutate(Radj2 = map_dbl(model, ~.$adj.r.squared*100) %>% number(acc=0.01)) %>% 
       select(-data, -model, -L, -`x*`) %>% 
