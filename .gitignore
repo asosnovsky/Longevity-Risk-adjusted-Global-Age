@@ -1,4 +1,3 @@
-data/00_raw/death_rates
 .Rproj.user
 .RData
 .Rhistory
@@ -11,3 +10,6 @@ data/00_raw/death_rates
 *test*
 paper
 notes*
+data/00_raw/death_rates/**/*.txt
+data/03_historic/stage1/*.rds
+data/03_historic/*.rds

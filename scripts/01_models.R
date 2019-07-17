@@ -25,7 +25,7 @@ dataset %>%
   # Generate initial lambda values
   mutate( l = log(1/(1-qx)) ) %>%
   # Group by Country and Gender, so that we may run the operations on each of the sub-groups
-  group_by(`Country Name`, Gender) %>% nest %>% 
+  group_by(`Country Name`, Year, Gender) %>% nest %>% 
   mutate(model = map(data, ~lapply( 
     # Create a sequence of potential accidental death lambdas
     seq(1E-5, min(.$l), by=1E-5),

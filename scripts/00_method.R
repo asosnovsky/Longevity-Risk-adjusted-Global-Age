@@ -1,6 +1,24 @@
 library(scales)
 library(tidyverse)
 
+apply_filters <- function(dataset, from_year, to_year, delta_year, from_age, to_age) {
+  dataset %>% 
+    filter(between(Age, from_age, to_age)) %>% 
+    inner_join(
+      tibble(Year= seq(from_year,to_year,delta_year)),
+      by="Year"
+    ) %>% 
+    group_by(`Country Name`) %>% arrange(Year) %>% nest %>% 
+    mutate(
+      ycounts = map_chr(data, ~paste(unique(.$Year), collapse=','))
+    ) %>% 
+    filter(
+      ycounts == paste(seq(from_year,to_year,delta_year), collapse = ',')
+    ) %>% 
+    select(-ycounts) %>% 
+    unnest(data)
+}
+
 compute_model1 <- function(dt, lambda_makeham) dt %>% 
   mutate( y = log(l-lambda_makeham) ) %>% nest %>% 
   mutate(
@@ -42,7 +60,8 @@ compute_stage1 <- function(narrow_table, qeps=0) narrow_table %>% mutate(
   select(-c(data, model)) %>% 
   unnest(params) 
 
-compute_stage2 <- function(stage1_model) stage1_model %>% group_by(Gender) %>% nest %>% 
+compute_stage2 <- function(stage1_model) stage1_model %>% 
+  group_by(Year, Gender) %>% nest %>% 
   mutate(
     # Run the lin-reg
     model = map(data, ~summary(lm( lnh~g, data=. )) ),
@@ -103,3 +122,4 @@ compute_table3 <- function(stage3_model) stage3_model %>%
   select(`Country Name`, Age, B_Age) %>% 
   spread(Age, B_Age) %>% 
   mutate_if(is.numeric, ~round(., 3))
+

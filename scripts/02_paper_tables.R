@@ -6,8 +6,6 @@ set.seed(0)
 
 # Load used libraries
 library(readr)
-library(tidyverse)
-library(scales)
 source("./scripts/00_method.R")
 
 # Read in the modelled data
