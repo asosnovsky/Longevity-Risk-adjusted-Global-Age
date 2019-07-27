@@ -9,7 +9,8 @@ Stage1_model <- read_rds("./data/04_historic_display/stage1.rds") %>%
   mutate(
     stat = case_when(
       stat == "b" ~"Dispersion Coefficient (b)",
-      stat == "m" ~ "Modal Value (m)"
+      stat == "m" ~ "Modal Value (m)",
+      stat == "lnh" ~ "Log Hazard Rate (ln(h))"
     )
   )
 Stage2_model <- read_rds("./data/04_historic_display/stage2.rds") %>%
