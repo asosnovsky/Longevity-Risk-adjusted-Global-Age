@@ -15,3 +15,4 @@ data/00_raw/cdeath_rates/**/*.txt
 data/03_historic/stage1/*.rds
 data/03_historic/cstage1/*.rds
 data/03_historic/*.rds
+data/04_historic_display/*.rds
