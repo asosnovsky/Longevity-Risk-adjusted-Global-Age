@@ -1,4 +1,4 @@
-\documentclass[12pt, titlepage]{article}%
+\documentclass[10pt, titlepage]{article}%
 \author{Ariel Sosnovsky}
 \usepackage{longtable}
 \usepackage{graphicx}
@@ -10,85 +10,83 @@
 \clearpage
 
 \begin{table}
-  \begin{center}
-  \begin{tabular}{||l||c|c||c|c||}
+  \begin{tabular}{||l|c|c|c|c|c|c||}
   \hline\hline
-  \multicolumn{5}{||c||}{Table \# 5a } \\ \hline\hline
-  \multicolumn{5}{||c||}{{\bf CLaM Regression Historical Fit - Coefficients}} \\ \hline\hline
+  \multicolumn{7}{||c||}{Table \# 4a } \\ \hline\hline
+  \multicolumn{7}{||c||}{{\bf First Regression: Historical Coefficients}} \\ \hline\hline
   
   { } & 
-  \multicolumn{2}{||c||}{ \bf Slope: $(x^{*})$ } & 
-  \multicolumn{2}{||c||}{ \bf Intercept $(L)$ } \\ \hline\hline
+  \multicolumn{2}{|c|}{ \bf Dispersion Coefficient $m$ } & 
+  \multicolumn{2}{|c|}{ \bf Modal Value $b$ }& 
+  \multicolumn{2}{|c||}{ \bf Log Hazard Rate $\ln(h)$ } \\ \hline\hline
   
   {\bf Year } &
   {MALE} & {FEMALE} &
+  {MALE} & {FEMALE} &
   {MALE} & {FEMALE} \\ \hline\hline
 
-  1960 &  $\bf 68.865$ $\pm 2.965$& $\bf 64.093$ $\pm 2.481$& $\bf -3.164$ $\pm 0.279$& $\bf -4.118$ $\pm 0.263$ \\ \hline\hline
-  1963 &  $\bf 70.120$ $\pm 2.943$& $\bf 63.795$ $\pm 2.788$& $\bf -3.025$ $\pm 0.278$& $\bf -4.163$ $\pm 0.298$ \\ \hline\hline
-  1966 &  $\bf 70.788$ $\pm 3.100$& $\bf 64.873$ $\pm 3.305$& $\bf -2.979$ $\pm 0.290$& $\bf -4.082$ $\pm 0.352$ \\ \hline\hline
-  1969 &  $\bf 72.564$ $\pm 3.715$& $\bf 65.301$ $\pm 3.516$& $\bf -2.788$ $\pm 0.347$& $\bf -4.023$ $\pm 0.372$ \\ \hline\hline
-  1972 &  $\bf 74.134$ $\pm 3.284$& $\bf 71.763$ $\pm 3.736$& $\bf -2.681$ $\pm 0.305$& $\bf -3.397$ $\pm 0.396$ \\ \hline\hline
-  1975 &  $\bf 76.603$ $\pm 3.352$& $\bf 70.694$ $\pm 3.766$& $\bf -2.449$ $\pm 0.310$& $\bf -3.536$ $\pm 0.399$ \\ \hline\hline
-  1978 &  $\bf 79.713$ $\pm 3.334$& $\bf 76.543$ $\pm 4.002$& $\bf -2.183$ $\pm 0.307$& $\bf -2.962$ $\pm 0.424$ \\ \hline\hline
-  1981 &  $\bf 84.348$ $\pm 3.083$& $\bf 80.103$ $\pm 4.193$& $\bf -1.772$ $\pm 0.285$& $\bf -2.623$ $\pm 0.444$ \\ \hline\hline
-  1984 &  $\bf 89.476$ $\pm 2.848$& $\bf 85.409$ $\pm 5.318$& $\bf -1.325$ $\pm 0.262$& $\bf -2.088$ $\pm 0.564$ \\ \hline\hline
-  1987 &  $\bf 91.508$ $\pm 2.968$& $\bf 89.920$ $\pm 5.952$& $\bf -1.160$ $\pm 0.277$& $\bf -1.639$ $\pm 0.635$ \\ \hline\hline
-  1990 &  $\bf 92.801$ $\pm 2.317$& $\bf 93.517$ $\pm 5.105$& $\bf -1.046$ $\pm 0.218$& $\bf -1.271$ $\pm 0.548$ \\ \hline\hline
-  1993 &  $\bf 94.911$ $\pm 1.909$& $\bf 100.236$ $\pm 5.256$& $\bf -0.831$ $\pm 0.182$& $\bf -0.551$ $\pm 0.566$ \\ \hline\hline
-  1996 &  $\bf 94.362$ $\pm 1.598$& $\bf 101.383$ $\pm 5.239$& $\bf -0.937$ $\pm 0.153$& $\bf -0.484$ $\pm 0.564$ \\ \hline\hline
-  1999 &  $\bf 94.739$ $\pm 1.638$& $\bf 108.254$ $\pm 6.350$& $\bf -0.916$ $\pm 0.159$& $\bf 0.240$ $\pm 0.687$ \\ \hline\hline
-  2002 &  $\bf 95.678$ $\pm 1.587$& $\bf 107.739$ $\pm 6.323$& $\bf -0.887$ $\pm 0.154$& $\bf 0.124$ $\pm 0.683$ \\ \hline\hline
-  2005 &  $\bf 96.976$ $\pm 1.600$& $\bf 110.100$ $\pm 6.964$& $\bf -0.818$ $\pm 0.156$& $\bf 0.303$ $\pm 0.749$ \\ \hline\hline
-  2008 &  $\bf 98.385$ $\pm 1.681$& $\bf 107.014$ $\pm 7.560$& $\bf -0.735$ $\pm 0.164$& $\bf -0.079$ $\pm 0.815$ \\ \hline\hline
-  2011 &  $\bf 98.756$ $\pm 1.803$& $\bf 99.910$ $\pm 8.997$& $\bf -0.770$ $\pm 0.177$& $\bf -0.916$ $\pm 0.970$ \\ \hline\hline
-  
-\multicolumn{5}{||r||}{{\em Source: Human Mortality Database, Period 1960-2011}} \\ \hline\hline
+  1960 &  $\bf 77.71$ $\pm 1.68$& $\bf 81.87$ $\pm 0.77$& $\bf 10.31$ $\pm 0.65$& $\bf 9.08$ $\pm 0.42$& $\bf -9.90$ $\pm 0.55$& $\bf -11.24$ $\pm 0.37$ \\ \hline\hline
+  1963 &  $\bf 77.39$ $\pm 1.62$& $\bf 81.91$ $\pm 0.79$& $\bf 10.35$ $\pm 0.56$& $\bf 9.10$ $\pm 0.44$& $\bf -9.84$ $\pm 0.49$& $\bf -11.23$ $\pm 0.39$ \\ \hline\hline
+  1966 &  $\bf 77.66$ $\pm 1.65$& $\bf 82.47$ $\pm 0.89$& $\bf 10.45$ $\pm 0.55$& $\bf 9.12$ $\pm 0.40$& $\bf -9.80$ $\pm 0.47$& $\bf -11.26$ $\pm 0.34$ \\ \hline\hline
+  1969 &  $\bf 77.52$ $\pm 1.69$& $\bf 82.59$ $\pm 0.87$& $\bf 10.56$ $\pm 0.48$& $\bf 9.31$ $\pm 0.45$& $\bf -9.71$ $\pm 0.43$& $\bf -11.12$ $\pm 0.35$ \\ \hline\hline
+  1972 &  $\bf 78.04$ $\pm 1.40$& $\bf 83.30$ $\pm 0.71$& $\bf 10.55$ $\pm 0.46$& $\bf 9.25$ $\pm 0.47$& $\bf -9.77$ $\pm 0.39$& $\bf -11.25$ $\pm 0.40$ \\ \hline\hline
+  1975 &  $\bf 78.22$ $\pm 1.31$& $\bf 83.80$ $\pm 0.60$& $\bf 10.51$ $\pm 0.46$& $\bf 9.29$ $\pm 0.52$& $\bf -9.81$ $\pm 0.38$& $\bf -11.27$ $\pm 0.42$ \\ \hline\hline
+  1978 &  $\bf 78.70$ $\pm 1.10$& $\bf 84.51$ $\pm 0.59$& $\bf 10.53$ $\pm 0.47$& $\bf 9.24$ $\pm 0.57$& $\bf -9.84$ $\pm 0.36$& $\bf -11.40$ $\pm 0.48$ \\ \hline\hline
+  1981 &  $\bf 79.16$ $\pm 1.01$& $\bf 84.89$ $\pm 0.71$& $\bf 10.37$ $\pm 0.43$& $\bf 9.22$ $\pm 0.57$& $\bf -9.99$ $\pm 0.34$& $\bf -11.46$ $\pm 0.50$ \\ \hline\hline
+  1984 &  $\bf 79.77$ $\pm 0.96$& $\bf 85.48$ $\pm 0.72$& $\bf 10.30$ $\pm 0.43$& $\bf 9.25$ $\pm 0.50$& $\bf -10.09$ $\pm 0.35$& $\bf -11.49$ $\pm 0.46$ \\ \hline\hline
+  1987 &  $\bf 80.22$ $\pm 0.93$& $\bf 85.81$ $\pm 0.86$& $\bf 10.22$ $\pm 0.38$& $\bf 9.21$ $\pm 0.52$& $\bf -10.19$ $\pm 0.33$& $\bf -11.56$ $\pm 0.50$ \\ \hline\hline
+  1990 &  $\bf 80.74$ $\pm 1.00$& $\bf 86.08$ $\pm 1.00$& $\bf 9.96$ $\pm 0.38$& $\bf 9.05$ $\pm 0.54$& $\bf -10.42$ $\pm 0.34$& $\bf -11.74$ $\pm 0.55$ \\ \hline\hline
+  1993 &  $\bf 81.32$ $\pm 1.11$& $\bf 86.41$ $\pm 1.21$& $\bf 9.72$ $\pm 0.35$& $\bf 8.95$ $\pm 0.47$& $\bf -10.65$ $\pm 0.34$& $\bf -11.87$ $\pm 0.50$ \\ \hline\hline
+  1996 &  $\bf 81.93$ $\pm 1.13$& $\bf 86.91$ $\pm 1.16$& $\bf 9.62$ $\pm 0.48$& $\bf 9.01$ $\pm 0.52$& $\bf -10.81$ $\pm 0.47$& $\bf -11.88$ $\pm 0.58$ \\ \hline\hline
+  1999 &  $\bf 82.32$ $\pm 1.09$& $\bf 87.21$ $\pm 1.16$& $\bf 9.50$ $\pm 0.53$& $\bf 9.02$ $\pm 0.41$& $\bf -10.94$ $\pm 0.50$& $\bf -11.89$ $\pm 0.48$ \\ \hline\hline
+  2002 &  $\bf 83.03$ $\pm 1.04$& $\bf 87.60$ $\pm 1.26$& $\bf 9.46$ $\pm 0.55$& $\bf 9.00$ $\pm 0.39$& $\bf -11.05$ $\pm 0.51$& $\bf -11.94$ $\pm 0.45$ \\ \hline\hline
+  2005 &  $\bf 83.74$ $\pm 1.05$& $\bf 88.38$ $\pm 1.09$& $\bf 9.46$ $\pm 0.62$& $\bf 9.04$ $\pm 0.38$& $\bf -11.13$ $\pm 0.57$& $\bf -11.99$ $\pm 0.44$ \\ \hline\hline
+  2008 &  $\bf 84.34$ $\pm 0.99$& $\bf 88.78$ $\pm 1.10$& $\bf 9.46$ $\pm 0.64$& $\bf 9.05$ $\pm 0.37$& $\bf -11.20$ $\pm 0.59$& $\bf -12.03$ $\pm 0.41$ \\ \hline\hline
+  2011 &  $\bf 85.07$ $\pm 0.90$& $\bf 89.35$ $\pm 1.12$& $\bf 9.43$ $\pm 0.59$& $\bf 9.11$ $\pm 0.33$& $\bf -11.29$ $\pm 0.54$& $\bf -12.03$ $\pm 0.34$ \\ \hline\hline
+     
+\multicolumn{7}{||r||}{{\em Source: Human Mortality Database, Period 1960-2011, 11 Countries}} \\ \hline\hline
 \end{tabular}
-\label{lab2}
-\smallskip
-\end{center}
+\label{table5a}
 \end{table}
 
 \begin{table}
-  \begin{center}
-  \begin{tabular}{||l||c|c||c|c||}
+  \begin{tabular}{||l|c|c|c|c|c|c||}
   \hline\hline
-  \multicolumn{5}{||c||}{Table \# 5b } \\ \hline\hline
-  \multicolumn{5}{||c||}{{\bf CLaM Regression Historical Fit - Parameters}} \\ \hline\hline
+  \multicolumn{7}{||c||}{Table \# 4b } \\ \hline\hline
+  \multicolumn{7}{||c||}{{\bf CLaM Regression: Historical Coefficients}} \\ \hline\hline
   
   { } & 
-  \multicolumn{2}{||c||}{ \bf Plateau: $\lambda^{*}$ } & 
-  \multicolumn{2}{||c||}{ \bf Average: $g[i]$ } \\ \hline\hline
+  \multicolumn{2}{|c|}{ \bf Slope: $(x^{*})$ } & 
+  \multicolumn{2}{|c|}{ \bf Intercept $(L)$ }  &
+  \multicolumn{2}{|c||}{ \bf Mortality Rate $(G)$ } \\ \hline\hline
   
   {\bf Year } &
   {MALE} & {FEMALE} &
+  {MALE} & {FEMALE} &
   {MALE} & {FEMALE} \\ \hline\hline
 
-  1960 &  $(0.02,0.07)$& $(0.01,0.03)$& $0.094$ & $0.106$  \\ \hline\hline
-  1963 &  $(0.03,0.08)$& $(0.01,0.03)$& $0.094$ & $0.107$  \\ \hline\hline
-  1966 &  $(0.03,0.09)$& $(0.01,0.03)$& $0.093$ & $0.106$  \\ \hline\hline
-  1969 &  $(0.03,0.12)$& $(0.01,0.04)$& $0.093$ & $0.106$  \\ \hline\hline
-  1972 &  $(0.04,0.13)$& $(0.01,0.07)$& $0.093$ & $0.106$  \\ \hline\hline
-  1975 &  $(0.05,0.16)$& $(0.01,0.06)$& $0.092$ & $0.106$  \\ \hline\hline
-  1978 &  $(0.06,0.21)$& $(0.02,0.12)$& $0.092$ & $0.106$  \\ \hline\hline
-  1981 &  $(0.10,0.30)$& $(0.03,0.18)$& $0.092$ & $0.106$  \\ \hline\hline
-  1984 &  $(0.16,0.45)$& $(0.04,0.38)$& $0.092$ & $0.106$  \\ \hline\hline
-  1987 &  $(0.18,0.55)$& $(0.05,0.69)$& $0.093$ & $0.107$  \\ \hline\hline
-  1990 &  $(0.23,0.54)$& $(0.09,0.84)$& $0.094$ & $0.107$  \\ \hline\hline
-  1993 &  $(0.30,0.63)$& $(0.19,1.79)$& $0.095$ & $0.107$  \\ \hline\hline
-  1996 &  $(0.29,0.53)$& $(0.20,1.90)$& $0.095$ & $0.107$  \\ \hline\hline
-  1999 &  $(0.29,0.55)$& $(0.32,5.02)$& $0.096$ & $0.108$  \\ \hline\hline
-  2002 &  $(0.30,0.56)$& $(0.29,4.43)$& $0.096$ & $0.108$  \\ \hline\hline
-  2005 &  $(0.32,0.60)$& $(0.30,6.06)$& $0.096$ & $0.107$  \\ \hline\hline
-  2008 &  $(0.34,0.67)$& $(0.18,4.72)$& $0.097$ & $0.108$  \\ \hline\hline
-  2011 &  $(0.32,0.66)$& $(0.06,2.79)$& $0.097$ & $0.108$  \\ \hline\hline
-     
-\multicolumn{5}{||r||}{{\em Source: Human Mortality Database, Period 1960-2011}} \\ \hline\hline
+  1960 &  $\bf 90.14$ $\pm 4.46$& $\bf 72.31$ $\pm 5.86$& $\bf -1.13$ $\pm 0.44$& $\bf -3.26$ $\pm 0.65$&  $0.0974$&  $0.1103$ \\ \hline\hline
+  1963 &  $\bf 91.52$ $\pm 5.20$& $\bf 73.78$ $\pm 5.63$& $\bf -0.97$ $\pm 0.50$& $\bf -3.10$ $\pm 0.62$&  $0.0969$&  $0.1101$ \\ \hline\hline
+  1966 &  $\bf 91.65$ $\pm 6.23$& $\bf 69.20$ $\pm 6.88$& $\bf -1.01$ $\pm 0.60$& $\bf -3.67$ $\pm 0.76$&  $0.0959$&  $0.1098$ \\ \hline\hline
+  1969 &  $\bf 96.60$ $\pm 6.83$& $\bf 66.94$ $\pm 5.94$& $\bf -0.55$ $\pm 0.65$& $\bf -3.91$ $\pm 0.64$&  $0.0948$&  $0.1076$ \\ \hline\hline
+  1972 &  $\bf 93.17$ $\pm 6.01$& $\bf 73.19$ $\pm 4.85$& $\bf -0.92$ $\pm 0.57$& $\bf -3.32$ $\pm 0.53$&  $0.0949$&  $0.1084$ \\ \hline\hline
+  1975 &  $\bf 89.72$ $\pm 6.52$& $\bf 72.66$ $\pm 3.78$& $\bf -1.26$ $\pm 0.62$& $\bf -3.43$ $\pm 0.41$&  $0.0953$&  $0.1080$ \\ \hline\hline
+  1978 &  $\bf 86.51$ $\pm 5.28$& $\bf 75.62$ $\pm 3.30$& $\bf -1.61$ $\pm 0.50$& $\bf -3.19$ $\pm 0.36$&  $0.0951$&  $0.1086$ \\ \hline\hline
+  1981 &  $\bf 85.85$ $\pm 5.71$& $\bf 76.76$ $\pm 3.84$& $\bf -1.69$ $\pm 0.55$& $\bf -3.11$ $\pm 0.42$&  $0.0966$&  $0.1089$ \\ \hline\hline
+  1984 &  $\bf 87.18$ $\pm 4.75$& $\bf 80.96$ $\pm 4.08$& $\bf -1.61$ $\pm 0.46$& $\bf -2.71$ $\pm 0.44$&  $0.0972$&  $0.1084$ \\ \hline\hline
+  1987 &  $\bf 87.28$ $\pm 5.67$& $\bf 83.79$ $\pm 4.44$& $\bf -1.63$ $\pm 0.56$& $\bf -2.44$ $\pm 0.48$&  $0.0980$&  $0.1089$ \\ \hline\hline
+  1990 &  $\bf 87.42$ $\pm 6.48$& $\bf 86.51$ $\pm 4.47$& $\bf -1.63$ $\pm 0.65$& $\bf -2.16$ $\pm 0.50$&  $0.1005$&  $0.1108$ \\ \hline\hline
+  1993 &  $\bf 86.59$ $\pm 8.69$& $\bf 86.91$ $\pm 7.01$& $\bf -1.73$ $\pm 0.90$& $\bf -2.14$ $\pm 0.79$&  $0.1030$&  $0.1120$ \\ \hline\hline
+  1996 &  $\bf 89.70$ $\pm 4.68$& $\bf 91.17$ $\pm 4.68$& $\bf -1.46$ $\pm 0.49$& $\bf -1.73$ $\pm 0.52$&  $0.1042$&  $0.1114$ \\ \hline\hline
+  1999 &  $\bf 86.88$ $\pm 4.70$& $\bf 96.05$ $\pm 5.78$& $\bf -1.77$ $\pm 0.50$& $\bf -1.22$ $\pm 0.64$&  $0.1055$&  $0.1111$ \\ \hline\hline
+  2002 &  $\bf 83.87$ $\pm 5.02$& $\bf 91.13$ $\pm 8.47$& $\bf -2.16$ $\pm 0.53$& $\bf -1.81$ $\pm 0.94$&  $0.1061$&  $0.1112$ \\ \hline\hline
+  2005 &  $\bf 84.46$ $\pm 4.31$& $\bf 92.57$ $\pm 7.07$& $\bf -2.17$ $\pm 0.46$& $\bf -1.74$ $\pm 0.78$&  $0.1061$&  $0.1108$ \\ \hline\hline
+  2008 &  $\bf 84.36$ $\pm 3.89$& $\bf 88.65$ $\pm 8.33$& $\bf -2.25$ $\pm 0.41$& $\bf -2.22$ $\pm 0.92$&  $0.1061$&  $0.1107$ \\ \hline\hline
+  2011 &  $\bf 83.72$ $\pm 4.14$& $\bf 80.95$ $\pm 10.39$& $\bf -2.39$ $\pm 0.44$& $\bf -3.13$ $\pm 1.14$&  $0.1064$&  $0.1100$ \\ \hline\hline
+        
+\multicolumn{7}{||r||}{{\em Source: Human Mortality Database, Period 1960-2011, 11 Countries}} \\ \hline\hline
 \end{tabular}
-\label{lab2}
-\smallskip
-\end{center}
+\label{table5a}
 \end{table}
 
 \end{document}

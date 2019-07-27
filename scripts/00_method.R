@@ -123,3 +123,34 @@ compute_table3 <- function(stage3_model) stage3_model %>%
   spread(Age, B_Age) %>% 
   mutate_if(is.numeric, ~round(., 3))
 
+compute_s2_param_list <- function(stage2_model) stage2_model %>%
+  mutate(
+    `l*` = L
+  ) %>%
+  gather(stat, value, -c(Year, Gender, model, data)) %>%
+  mutate(
+    std = case_when(
+      stat == "L" ~ map_dbl(model, ~.$coefficients[1,2]),
+      stat == "l*" ~ map_dbl(model, ~.$coefficients[1,2]),
+      stat == "x*" ~ map_dbl(model, ~.$coefficients[2,2]),
+      stat == "G" ~ 0
+    ),
+    upper = value + 2*std,
+    lower = value - 2*std
+  ) %>% 
+  mutate(
+    l_m = map_dbl(data, ~mean(.$l_m)),
+    value = case_when(
+      stat == "l*" ~ exp(value) - l_m,
+      TRUE ~ value
+    ),
+    upper = case_when(
+      stat == "l*" ~ exp(upper) - l_m,
+      TRUE ~ upper
+    ),
+    lower = case_when(
+      stat == "l*" ~ exp(lower) - l_m,
+      TRUE ~ lower
+    )
+  ) 
+
