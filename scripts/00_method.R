@@ -1,11 +1,11 @@
 library(scales)
 library(tidyverse)
 
-apply_filters <- function(dataset, from_year, to_year, delta_year, from_age, to_age) {
-  dataset %>% 
-    filter(between(Age, from_age, to_age)) %>% 
+apply_filters <- function(dt, from_year, to_year, delta_year) {
+  constricted_years = seq(from_year, to_year, delta_year)
+  dt %>% 
     inner_join(
-      tibble(Year= seq(from_year,to_year,delta_year)),
+      tibble(Year= constricted_years),
       by="Year"
     ) %>% 
     group_by(`Country Name`) %>% arrange(Year) %>% nest %>% 
@@ -13,7 +13,7 @@ apply_filters <- function(dataset, from_year, to_year, delta_year, from_age, to_
       ycounts = map_chr(data, ~paste(unique(.$Year), collapse=','))
     ) %>% 
     filter(
-      ycounts == paste(seq(from_year,to_year,delta_year), collapse = ',')
+      ycounts == paste( constricted_years, collapse = ',')
     ) %>% 
     select(-ycounts) %>% 
     unnest(data)
@@ -154,3 +154,60 @@ compute_s2_param_list <- function(stage2_model) stage2_model %>%
     )
   ) 
 
+prep_display_data_stage1 <- function(s1) s1 %>%
+  group_by(Year, Gender) %>% nest %>%
+  mutate(
+    b = map_dbl(data, ~mean(.$b)),
+    m = map_dbl(data, ~mean(.$m)),
+    lnh = map_dbl(data, ~mean(.$lnh))
+    #,    N = map_dbl(data, ~length(unique(.$`Country Name`)))
+  ) %>%
+  gather(stat, value, -c(Year, Gender, data)) %>%
+  mutate(
+    std = case_when(
+      stat == "b" ~ map_dbl(data, ~sd(.$b)),
+      stat == "m" ~ map_dbl(data, ~sd(.$m)),
+      stat == "lnh" ~ map_dbl(data, ~sd(.$lnh))
+    ),
+    upper = value + 2*std,
+    lower = value - 2*std
+  )
+prep_display_data_stage2 <- function(s1) s1 %>%
+  compute_stage2 %>%
+  gather(stat, value, -c(Year, Gender, model, data)) %>%
+  mutate(
+    std = case_when(
+      stat == "L" ~ map_dbl(model, ~.$coefficients[1,2]),
+      stat == "x*" ~ map_dbl(model, ~.$coefficients[2,2]),
+      stat == "G" ~ 0
+    ),
+    upper = value + 2*std,
+    lower = value - 2*std
+  )
+
+history_plot <- function(d, title, x_breaks=12, y_breaks=8, no_title=F) d %>% 
+  group_by(Gender, stat) %>% 
+  mutate( mean_value = mean(value), N = map_dbl(data, ~length(unique(.$`Country Name`))) ) %>%
+  ggplot(aes(x=Year,y=value)) +
+  facet_grid(stat~Gender, scale='free') +
+  geom_line() +
+  geom_ribbon(aes(ymin=upper, ymax=lower), alpha=0.2) +
+  geom_hline(aes(yintercept = mean_value), linetype="dashed") +
+  geom_label(aes( 
+    y=Inf, 
+    label=paste0(
+      "mean = ", round(mean_value, 3), 
+      ", N = ", N
+    ),
+    x=-Inf,
+    vjust = 1.15,
+    hjust = -0.025
+  )) +
+  theme(axis.title.y=element_blank()) + 
+  scale_x_continuous(breaks = scales::pretty_breaks(n = x_breaks)) +  
+  scale_y_continuous(breaks = scales::pretty_breaks(n = y_breaks))  + 
+  labs(title = ifelse(no_title, "", paste0(
+    title,
+    " (", min(d$Year), " to ", max(d$Year), ")"
+  ))) +
+  theme(plot.title = element_text(hjust = 0.5, family="serif"))

@@ -54,13 +54,11 @@ s1_prep %>%
       map_chr(Male, ~.$latex_m), "& ",
       map_chr(Female, ~.$latex_m), "& ",
       map_chr(Male, ~.$latex_b), "& ",
-      map_chr(Female, ~.$latex_b), "& ",
-      map_chr(Male, ~.$latex_lnh), "& ",
-      map_chr(Female, ~.$latex_lnh)
+      map_chr(Female, ~.$latex_b)
     )
   ) %>%
   select(Year, latex) %>%
-  filter( Year %in% seq(1960, 2011, by=3) ) %>%
+  filter( Year %in% seq(1945, 2011, by=3) ) %>%
   apply(1, function(r) {
     cat(r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
         file=table4a_loc, append = T)
@@ -80,7 +78,7 @@ s2_prep %>%
     )
   ) %>%
   select(Year, latex) %>%
-  filter( Year %in% seq(1960, 2011, by=3) ) %>%
+  filter( Year %in% seq(1945, 2011, by=3) ) %>%
   apply(1, function(r) {
     cat(r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
         file=table4b_loc, append = T)
