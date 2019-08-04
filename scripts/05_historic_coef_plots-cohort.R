@@ -104,7 +104,7 @@ history_plot <- function(d, title) d %>%
 
 # Plot
 postscript("images/fig6a.eps", family = "serif")
-s1_prep %>% history_plot("Figure 6a: Historic Gompez Coefficients - Cohorts")
+s1_prep %>% history_plot("Figure 6a: Historic Gompertz Coefficients - Cohorts")
 dev.off()
 ggsave("images/fig6a.jpg")
 postscript("images/fig5b.eps", family = "serif")

@@ -42,6 +42,8 @@ Stage2_model %>%
   gather(stat, value) %>%
   separate(stat, c("coef", "stat"), sep=" ") %>%
   spread(stat, value) %>%
+  mutate_if(is.numeric, ~number(., acc=0.01)) %>%
+  select(Coefficient = coef, Value, `t-value`, `Std.Err`) %>%
   write_csv("data/05_china/table2-coef.csv")
 
 Stage2_model %>% select(-c(L, G, `x*`)) %>%

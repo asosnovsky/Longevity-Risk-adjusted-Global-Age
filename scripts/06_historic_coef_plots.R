@@ -50,7 +50,7 @@ full_join(
 prep_data1945 %>%
   prep_display_data_stage1 %>%
   filter( stat != "lnh" ) %>% pretty_names_s1 %>%
-  history_plot("Figure 5a: Historic Gompez Coefficients", x_breaks = 5) %>%
+  history_plot("Figure 5a: Historic Gompertz Coefficients", x_breaks = 5) %>%
   save_plots("images/figure-5/with-title/fig5a")
 
 prep_data1945 %>% 
@@ -61,7 +61,7 @@ prep_data1945 %>%
 prep_data1900 %>%
   prep_display_data_stage1 %>%
   filter( stat != "lnh" ) %>% pretty_names_s1 %>%
-  history_plot("Figure 5b: Historic Gompez Coefficients", x_breaks = 5) %>%
+  history_plot("Figure 5b: Historic Gompertz Coefficients", x_breaks = 5) %>%
   save_plots("images/figure-5/with-title/fig5b")
 
 prep_data1900 %>% 
@@ -76,7 +76,7 @@ prep_data1900 %>%
 prep_data1947 %>%
   prep_display_data_stage1 %>%
   filter( stat != "lnh" ) %>% pretty_names_s1 %>%
-  history_plot("Figure 5a: Historic Gompez Coefficients", x_breaks = 5, no_title = T) %>%
+  history_plot("Figure 5a: Historic Gompertz Coefficients", x_breaks = 5, no_title = T) %>%
   save_plots("images/figure-5/no-title/fig5a")
 
 prep_data1947 %>% 
@@ -87,7 +87,7 @@ prep_data1947 %>%
 prep_data1900 %>%
   prep_display_data_stage1 %>%
   filter( stat != "lnh" ) %>% pretty_names_s1 %>%
-  history_plot("Figure 5b: Historic Gompez Coefficients", x_breaks = 5, no_title = T) %>%
+  history_plot("Figure 5b: Historic Gompertz Coefficients", x_breaks = 5, no_title = T) %>%
   save_plots("images/figure-5/no-title/fig5b")
 
 prep_data1900 %>% 
