@@ -6,7 +6,7 @@
 **.fdb*
 **.log
 **.gz
-**.csv
+data/00_raw/full_qx_cdata.csv
 *test*
 paper
 notes*
