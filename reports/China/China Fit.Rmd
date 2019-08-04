@@ -1,0 +1,97 @@
+---
+title: "China Fit"
+output:
+  pdf_document: default
+---
+
+
+# Loading Dependencies
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+# General purpose  data-wranglinglibraries
+library(tidyverse)
+library(readr)
+# Pretty print tables
+library(knitr)
+# The methodology in Prof. Milvesky paper
+source("../../scripts/00_method.R")
+```
+
+# Loading Data
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+df <- bind_rows(
+  read_table2("../../data/00_raw/china/group1.tsv") %>% mutate(Sector="1"),
+  read_table2("../../data/00_raw/china/group2.tsv") %>% mutate(Sector="2"),
+  read_table2("../../data/00_raw/china/group3.tsv") %>% mutate(Sector="3"),
+  read_table2("../../data/00_raw/china/group4.tsv") %>% mutate(Sector="4"),
+  read_table2("../../data/00_raw/china/group5.tsv") %>% mutate(Sector="5")
+) %>% 
+  # only keep the Sector, Age and qx columns
+  select(Sector, Age, qx)
+```
+
+# Compute Stages
+
+```{r}
+df %>% 
+  # Filter for age-range
+  filter(between(Age, 35, 95)) %>%
+  # Apply stage 1 to each sector
+  group_by(Sector) %>%
+  compute_stage1 ->
+  Stage1_model
+
+# Compute last two stages
+Stage1_model %>% compute_stage2 -> Stage2_model
+Stage2_model %>% compute_stage3 -> Stage3_model
+```
+
+\newpage
+
+# Output
+
+## Table 1
+
+```{r}
+Stage1_model %>% 
+  mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
+  mutate( l_m = l_m*10^5 ) %>%
+  mutate_if(is.numeric, ~round(., 3)) %>% 
+  select(Sector, lnh, l_m, g, m, b) %>% kable
+```
+
+
+# Table 2 
+
+## Regression Coefficients
+
+```{r}
+tibble(Coefficients = c("L", "-x*")) %>% 
+  bind_cols( as_tibble(Stage2_model$model[[1]]$coefficients ) ) %>%
+  mutate_if(is.numeric, ~round(., 3)) %>% kable
+```
+
+## Other Parameters
+
+```{r}
+Stage2_model %>% select(data, model, G) %>%
+  mutate(params = map(data, ~tibble(
+    `Range: g` = paste0("(", percent(min(.$g)), ', ', percent(max(.$g)), ')' ),
+    `Sectors` = nrow(.),
+  ))) %>% unnest(params) %>% 
+  mutate_if(is.numeric, ~round(., 3)) %>% 
+  mutate( `Adj. R^2` = map_chr(model, ~.$adj.r.squared %>% percent)) %>%
+  select(-c(data,model)) %>% gather(stat, value) %>% kable
+```
+
+# Table 3
+
+```{r}
+Stage3_model %>% filter( Age %in% c(35, 55, 70, 85, 95) ) %>% 
+  mutate( Age = paste0("x = ", Age) )  %>% 
+  select(`Sector`, Age, B_Age) %>% 
+  spread(Age, B_Age) %>% 
+  mutate_if(is.numeric, ~number(., acc=0.01)) %>%
+  kable
+```
