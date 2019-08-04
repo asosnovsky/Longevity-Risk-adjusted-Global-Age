@@ -41,7 +41,7 @@ Stage1_model %>% write_rds("./data/02_models/stage1.rds")
 #################################################
 # Stage Two - CLaM
 #################################################
-Stage1_model %>% compute_stage2 -> Stage2_model
+Stage1_model %>% group_by(Year, Gender) %>% compute_stage2 -> Stage2_model
 
 Stage2_model %>% write_rds("./data/02_models/stage2.rds")
 

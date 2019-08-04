@@ -55,6 +55,7 @@ pdata %>%
   ) -> s1_prep
 
 pdata %>% 
+  group_by(Year, Gender) %>%
   compute_stage2 %>%
   gather(stat, value, -c(Year, Gender, model, data)) %>%
   mutate(

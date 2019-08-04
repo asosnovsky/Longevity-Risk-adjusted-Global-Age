@@ -38,7 +38,8 @@ stage1_model %>% group_by(Gender) %>%
 ##########################
 #   Table 2 Generation
 ##########################
-stage1_model %>% compute_stage2 -> stage2_model
+stage1_model %>% 
+  group_by(Year, Gender) %>% compute_stage2 -> stage2_model
 
 # Format numbers
 stage2_model %>% compute_table2 -> table2

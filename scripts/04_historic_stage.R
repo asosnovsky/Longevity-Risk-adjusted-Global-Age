@@ -24,18 +24,6 @@ dataset %>%
 
 # filter(!(Country %in% c("LUX", "ISL", "BGR", "CHL", "BEL")))
 
-# Define Process
-compute_stage1 <- function(d) d %>% 
-  mutate( l = log(1/(1-qx)) ) %>% 
-  group_by(Year, Gender, Country, `Country Name`) %>% nest %>% 
-  mutate(model = map(data, ~lapply( 
-    seq(1E-5, min(.$l), by=1E-5),
-    function(l_m) compute_model1(., l_m)
-  ) %>% reduce(bind_rows)
-  ) ) %>%
-  mutate( optimal = map(model, ~filter(., sigma==min(sigma))) ) %>% 
-  unnest(optimal) 
-
 # init parallel compute
 registerDoMC(2)
 
@@ -61,6 +49,7 @@ out = foreach(
     fdataset %>%
       filter( Country == grps[i,]$Country ) %>%
       filter( Year == grps[i,]$Year ) %>%
+      group_by(Year, Gender, Country, `Country Name`) %>% 
       compute_stage1 %>%
       write_rds(save_path) 
   }

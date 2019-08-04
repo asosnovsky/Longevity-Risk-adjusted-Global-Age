@@ -38,30 +38,17 @@ compute_model1 <- function(dt, lambda_makeham) dt %>%
   select(-c(data, model)) %>% 
   unnest(params) 
 
-compute_stage1 <- function(narrow_table, qeps=0) narrow_table %>% mutate( 
-  l = log(1/(1-qx-qeps)),
-  y = log(l-(lambda_makeham)*10^-5)  
-) %>% 
-  # Segment the dataset by country and gender
-  group_by(`Country Name`, Gender) %>% nest %>% 
-  mutate(
-    # Fit model
-    model = map(data, ~lm(y~Age ,data=.)),
-    # Extracts params
-    l_m = map_dbl(data, ~unique(.$lambda_makeham)),
-    params = map(model, ~tibble(
-      K0 = .$coefficients[1],
-      g = .$coefficients[2],
-      lnh = as.numeric(K0-log((exp(g)-1)/g)),
-      m = (log(g) - lnh)/g,
-      b = 1/g
-    ))
-  ) %>% 
-  select(-c(data, model)) %>% 
-  unnest(params) 
+compute_stage1 <- function(d) d %>% 
+  mutate( l = log(1/(1-qx)) ) %>% nest %>% 
+  mutate(model = map(data, ~lapply( 
+    seq(1E-5, min(.$l), by=1E-5),
+    function(l_m) compute_model1(., l_m)
+  ) %>% reduce(bind_rows)
+  ) ) %>%
+  mutate( optimal = map(model, ~filter(., sigma==min(sigma))) ) %>% 
+  unnest(optimal) 
 
-compute_stage2 <- function(stage1_model) stage1_model %>% 
-  group_by(Year, Gender) %>% nest %>% 
+compute_stage2 <- function(stage1_model) stage1_model %>% nest %>% 
   mutate(
     # Run the lin-reg
     model = map(data, ~summary(lm( lnh~g, data=. )) ),
@@ -173,6 +160,7 @@ prep_display_data_stage1 <- function(s1) s1 %>%
     lower = value - 2*std
   )
 prep_display_data_stage2 <- function(s1) s1 %>%
+  group_by(Year, Gender) %>%
   compute_stage2 %>%
   gather(stat, value, -c(Year, Gender, model, data)) %>%
   mutate(
