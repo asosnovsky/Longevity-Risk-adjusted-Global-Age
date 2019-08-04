@@ -26,32 +26,41 @@ Stage2_model %>% compute_stage3 -> Stage3_model
 Stage1_model %>% 
   mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
   mutate_if(is.numeric, ~round(., 3)) %>% 
-  select(Sector, lnh, l_m, g, m, b)
+  select(Sector, lnh, l_m, g, m, b) %>%
+  write_csv("data/05_china/table1.csv")
 
 # Table 2
-Stage2_model %>% mutate(params = map(model, ~tibble(
-    `6_Adj. R^2` = .$adj.r.squared %>% percent,
-    `2_L Std.Err` = .$coefficients[1,2],
-    `3_-x* Std.Err` = .$coefficients[2,2],
-    `4_L t-value` = .$coefficients[1,3],
-    `5_-x* t-value` = .$coefficients[2,3],
-  ))) %>% unnest(params) %>% 
+Stage2_model %>% 
+  rename(`L Value` = L, `x* Value` = `x*`, `G Value` = G) %>%
+  mutate(params = map(model, ~tibble(
+    `L Std.Err` = .$coefficients[1,2],
+    `x* Std.Err` = .$coefficients[2,2],
+    `L t-value` = .$coefficients[1,3],
+    `x* t-value` = .$coefficients[2,3],
+  ))) %>% unnest(params) %>%
+  select(-c(data, model)) %>%
+  gather(stat, value) %>%
+  separate(stat, c("coef", "stat"), sep=" ") %>%
+  spread(stat, value) %>%
+  write_csv("data/05_china/table2-coef.csv")
+
+Stage2_model %>% select(-c(L, G, `x*`)) %>%
   mutate(params = map(data, ~tibble(
-    `7_Range: g` = paste0("(", percent(min(.$g)), ', ', percent(max(.$g)), ')' ),
-    `9_Countries` = nrow(.)
+    `Range: g` = paste0("(", percent(min(.$g)), ', ', percent(max(.$g)), ')' ),
+    `Sectors` = nrow(.),
   ))) %>% unnest(params) %>% 
   mutate_if(is.numeric, ~round(., 3)) %>% 
-  rename(
-    `0_L` = L,
-    `1_x*` = `x*`,
-    `8_G` = G
-  ) %>% 
-  select(-data, -model) %>%
-  gather(stat, value) 
+  mutate( `Adj. R^2` = map_chr(model, ~.$adj.r.squared %>% percent)) %>%
+  select(-c(data,model)) %>%
+  gather(stat, value) %>%
+  write_csv("data/05_china/table2-stats.csv")
+
 
 # Table 3
 Stage3_model %>% filter( Age %in% c(35, 55, 70, 85, 95) ) %>% 
   mutate( Age = paste0("x = ", Age) )  %>% 
   select(`Sector`, Age, B_Age) %>% 
   spread(Age, B_Age) %>% 
-  mutate_if(is.numeric, ~number(., acc=0.01))  
+  mutate_if(is.numeric, ~number(., acc=0.01)) %>%
+  write_csv("data/05_china/table3.csv")
+
