@@ -1,24 +1,35 @@
+# Required Libraries
 library(scales)
 library(tidyverse)
 
+# --------------------------
+# This file contains various functions used throughout this research
+# It ensures that all processes used are the same and are standardized,
+# regardless of when we apply them
+# --------------------------
+
+## Section 1 - Utility functions
+
+### This function will ensure that only countries that have data from 
+### the provided start-date and end-date (consecutively) will be kept
 apply_filters <- function(dt, from_year, to_year, delta_year) {
   constricted_years = seq(from_year, to_year, delta_year)
   dt %>% 
-    inner_join(
-      tibble(Year= constricted_years),
-      by="Year"
-    ) %>% 
-    group_by(`Country Name`) %>% arrange(Year) %>% nest %>% 
-    mutate(
-      ycounts = map_chr(data, ~paste(unique(.$Year), collapse=','))
-    ) %>% 
-    filter(
-      ycounts == paste( constricted_years, collapse = ',')
-    ) %>% 
+    inner_join( tibble(Year= constricted_years), by="Year" ) %>% 
+    group_by(`Country Name`) %>% 
+    arrange(Year) %>% nest %>% 
+    mutate( ycounts = map_chr(data, ~paste(unique(.$Year), collapse=',')) ) %>% 
+    filter( ycounts == paste( constricted_years, collapse = ',') ) %>% 
     select(-ycounts) %>% 
     unnest(data)
 }
 
+## Section 2 - Model Functions
+
+### This function computes the result of the first regression, 
+### however it requires that you first specify a lambda_m value
+### for the optimize function that will try all values of lambda and return 
+### a more optimized value see `compute_stage1`
 compute_model1 <- function(dt, lambda_makeham) dt %>% 
   mutate( y = log(l-lambda_makeham) ) %>% nest %>% 
   mutate(
@@ -35,9 +46,14 @@ compute_model1 <- function(dt, lambda_makeham) dt %>%
       sigma = .$sigma
     ))
   ) %>% 
-  select(-c(data, model)) %>% 
   unnest(params) 
 
+### This function will take a simple narrow data-set, that is assumed to be
+### already pre-grouped and filtered, and apply `stage 1` as described in the paper
+###   - First it will compute the log-inverse of qx
+###   - Then it will generate sample l_m values starting with 1E-5
+###   - Then it will fit the first regression against all lambdas
+###   - Lastly it will filter out the best model best on the standard-error measure
 compute_stage1 <- function(d) d %>% 
   mutate( l = log(1/(1-qx)) ) %>% nest %>% 
   mutate(model = map(data, ~lapply( 
@@ -48,6 +64,10 @@ compute_stage1 <- function(d) d %>%
   mutate( optimal = map(model, ~filter(., sigma==min(sigma))) ) %>% 
   unnest(optimal) 
 
+### This function will take the results of the `compute_stage1` function
+### and will compute the second stage as described in the paper
+###   - first it will fit a regression of lnh vs g
+###   - then it will extract the L and x* parameters
 compute_stage2 <- function(stage1_model) stage1_model %>% nest %>% 
   mutate(
     # Run the lin-reg
@@ -58,6 +78,11 @@ compute_stage2 <- function(stage1_model) stage1_model %>% nest %>%
     G = map_dbl(data, ~mean(.$g))
   )
 
+### This function will take the results of the `compute_stage2` function
+### and will compute the third and fourth stages as described in the paper
+###   - first it will exctract the standard errors for x*
+###   - then it will compute a parameter k_i
+###   - lastly it will be the extracted information to compute Biological Age
 compute_stage3 <- function(stage2_model) stage2_model %>% 
   mutate(
     x_stdev = map_dbl(model, ~.$coefficients[2,2]),
@@ -65,15 +90,16 @@ compute_stage3 <- function(stage2_model) stage2_model %>%
     `x* - lower` = `x*` - 2*x_stdev,
   ) %>% 
   unnest(data) %>% 
-  mutate(
-    ki = (g/G)-1
-  ) %>% unnest(data) %>% 
+  mutate(  ki = (g/G)-1 ) %>% unnest(data) %>% 
   mutate(
     B_Age = Age - ki*(`x*`-Age),
     B_Age_Upper = Age - ki*(`x* - higher`-Age),
     B_Age_Lower = Age - ki*(`x* - lower`-Age)
   ) -> Stage3_model
 
+## Section 3 - "Prettifying Functions"
+## The functions in this section simply modify the extraction of various stages
+## round and format the numeric values and provide clean neater looking tables
 
 compute_table1 <- function(stage1_model) stage1_model %>% 
   mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
@@ -141,6 +167,11 @@ compute_s2_param_list <- function(stage2_model) stage2_model %>%
     )
   ) 
 
+
+## Section 4 -  Plotting
+
+### This function takes the output of `compute_stage1` and provide a table with 
+### the variables `b` `m` and `lnh` with their confidence intervals
 prep_display_data_stage1 <- function(s1) s1 %>%
   group_by(Year, Gender) %>% nest %>%
   mutate(
@@ -159,6 +190,10 @@ prep_display_data_stage1 <- function(s1) s1 %>%
     upper = value + 2*std,
     lower = value - 2*std
   )
+
+
+### This function takes the output of `compute_stage1` and provide a table with 
+### the variables `L` `x*` and `G` with their confidence intervals
 prep_display_data_stage2 <- function(s1) s1 %>%
   group_by(Year, Gender) %>%
   compute_stage2 %>%
@@ -173,6 +208,8 @@ prep_display_data_stage2 <- function(s1) s1 %>%
     lower = value - 2*std
   )
 
+### This function takes one of the outputs of the "prep_display_data_stage*" functions
+### and provide a historical plot (this assumes the dataframe has historic data)
 history_plot <- function(d, title, x_breaks=12, y_breaks=8, no_title=F) d %>% 
   group_by(Gender, stat) %>% 
   mutate( mean_value = mean(value), N = map_dbl(data, ~length(unique(.$`Country Name`))) ) %>%
