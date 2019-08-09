@@ -1,3 +1,9 @@
+#
+# This file will generate the raw country-codes from a manually-extracted
+# csv file
+#
+#
+
 rm(list=ls())
 library(readr)
 library(tidyverse)

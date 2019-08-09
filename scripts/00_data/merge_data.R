@@ -1,3 +1,15 @@
+##############
+#
+# This file will recreate the joined datasets used in this analysis
+# Specifically the following tables:
+#  - ./data/01_processed/2011_qx_data.csv
+#  - ./data/01_processed/full_qx_data.csv
+#
+# Please make sure to grab the "death_rates.zip" file from 
+#  https://www.mortality.org/cgi-bin/hmd/hmd_download.php
+# Under the "PERIOD DATA" / Death Rates row
+# Then extract the contents of the zip file into "./data/00_raw/death_rates"
+
 rm(list=ls())
 library(readr)
 library(tidyverse)
@@ -26,10 +38,8 @@ country_codes$CountryCode %>%
   rename( `Country Name` = CountryName ) -> 
   dataset
 
-
 dataset %>% filter( Year == 2011 ) %>% 
   write_csv("./data/01_processed/2011_qx_data.csv")
-
 
 dataset %>% 
   write_csv("./data/01_processed/full_qx_data.csv")
