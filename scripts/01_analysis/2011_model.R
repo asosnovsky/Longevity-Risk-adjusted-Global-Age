@@ -18,22 +18,16 @@ dataset = read_csv("./data/01_processed/2011_qx_data.csv") %>%
 
 #################################################
 # Stage One - Estimating Sub-Group Parameters
+# --- PLEASE BE AWARE THAT THIS IS SLOW ---
+#   --- IT TAKE ~2-5 minutes to run ---
 #################################################
 dataset %>%
   # Limit to Just Ages between 35 to 95
   filter(between(Age, 35, 95)) %>% 
-  # Generate initial lambda values
-  mutate( l = log(1/(1-qx)) ) %>%
   # Group by Country and Gender, so that we may run the operations on each of the sub-groups
-  group_by(`Country Name`, Year, Gender) %>% nest %>% 
-  mutate(model = map(data, ~lapply( 
-    # Create a sequence of potential accidental death lambdas
-    seq(1E-5, min(.$l), by=1E-5),
-    # Fit a linear-regression model for each acc-death lambda per sub-group
-    function(l_m) compute_model1(., l_m)
-  ) %>% reduce(bind_rows))) %>%
-  mutate( optimal = map(model, ~filter(., sigma==min(sigma))) ) %>% 
-  unnest(optimal) -> 
+  group_by(`Country Name`, Year, Gender) %>%
+  # Compute the results of stage1
+  compute_stage1 -> 
   Stage1_model
 
 Stage1_model %>% write_rds("./data/02_models/stage1.rds")

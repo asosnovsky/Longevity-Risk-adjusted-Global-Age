@@ -58,7 +58,7 @@ compute_stage1 <- function(d) d %>%
   mutate( l = log(1/(1-qx)) ) %>% nest %>% 
   mutate(model = map(data, ~lapply( 
     seq(1E-5, min(.$l), by=1E-5),
-    function(l_m) compute_model1(., l_m)
+    function(l_m) compute_model1(., l_m) %>% select(-c(data, model))
   ) %>% reduce(bind_rows)
   ) ) %>%
   mutate( optimal = map(model, ~filter(., sigma==min(sigma))) ) %>% 

@@ -13,8 +13,5 @@ paper
 notes*
 data/00_raw/death_rates/**/*.txt
 data/00_raw/cdeath_rates/**/*.txt
-data/03_historic/stage1/*.rds
-data/03_historic/cstage1/*.rds
-data/03_historic/*.rds
-data/04_historic_display/*.rds
+data/02_models/historic_stage1/*.rds
 scripts/_*.R

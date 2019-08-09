@@ -27,7 +27,7 @@ Stage1_model %>%
   mutate( g = g %>% percent(accuracy = 0.001) ) %>% 
   mutate_if(is.numeric, ~round(., 3)) %>% 
   select(Sector, lnh, l_m, g, m, b) %>%
-  write_csv("data/05_china/table1.csv")
+  write_csv("data/03_china/table1.csv")
 
 # Table 2
 Stage2_model %>% 
@@ -44,7 +44,7 @@ Stage2_model %>%
   spread(stat, value) %>%
   mutate_if(is.numeric, ~number(., acc=0.01)) %>%
   select(Coefficient = coef, Value, `t-value`, `Std.Err`) %>%
-  write_csv("data/05_china/table2-coef.csv")
+  write_csv("data/03_china/table2-coef.csv")
 
 Stage2_model %>% select(-c(L, G, `x*`)) %>%
   mutate(params = map(data, ~tibble(
@@ -55,7 +55,7 @@ Stage2_model %>% select(-c(L, G, `x*`)) %>%
   mutate( `Adj. R^2` = map_chr(model, ~.$adj.r.squared %>% percent)) %>%
   select(-c(data,model)) %>%
   gather(stat, value) %>%
-  write_csv("data/05_china/table2-stats.csv")
+  write_csv("data/03_china/table2-stats.csv")
 
 
 # Table 3
@@ -64,5 +64,5 @@ Stage3_model %>% filter( Age %in% c(35, 55, 70, 85, 95) ) %>%
   select(`Sector`, Age, B_Age) %>% 
   spread(Age, B_Age) %>% 
   mutate_if(is.numeric, ~number(., acc=0.01)) %>%
-  write_csv("data/05_china/table3.csv")
+  write_csv("data/03_china/table3.csv")
 

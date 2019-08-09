@@ -1,4 +1,21 @@
+###################
+# This file will output the images saved under the images folder
+###################
+
+# Ensure we are starting with a clean-slate
+rm(list=ls())
+
+# Load used libraries
 library(ggstance)
+library(readr)
+library(tidyverse)
+library(scales)
+source("./scripts/00_method.R")
+
+# Read in the modelled data
+Stage1_model <- read_rds("./data/02_models/stage1.rds")%>% filter( Gender != "Total" )
+Stage2_model <- read_rds("./data/02_models/stage2.rds")%>% filter( Gender != "Total" )
+Stage3_model <- read_rds("./data/02_models/stage3.rds")%>% filter( Gender != "Total" )
 
 dir_save = "images/"
 

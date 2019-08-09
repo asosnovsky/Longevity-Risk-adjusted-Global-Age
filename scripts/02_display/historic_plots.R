@@ -6,7 +6,7 @@ library(readr)
 source("./scripts/00_method.R")
 
 # Read in the modelled data
-Stage1_model <- read_rds("./data/03_historic/stage1-lg.rds")
+Stage1_model <- read_rds("./data/02_models/historic-stage1.rds")
 
 # Util functions
 pretty_names_s1 <- function(s1) s1 %>% mutate( stat = case_when(

@@ -1,3 +1,7 @@
+##
+## This file will prep the data used for the historic plots and latex tables
+##
+
 # Ensure we are starting with a clean-slate
 rm(list=ls())
 
@@ -6,7 +10,7 @@ library(readr)
 source("./scripts/00_method.R")
 
 # Read in the modelled data
-Stage1_model <- read_rds("./data/03_historic/stage1-lg.rds")
+Stage1_model <- read_rds("./data/02_models/historic-stage1.rds")
 
 # Prep Data
 Stage1_model %>% 
@@ -16,8 +20,8 @@ Stage1_model %>%
 
 prep_data %>%
   prep_display_data_stage1 %>%
-  write_rds("./data/04_historic_display/stage1.rds")
+  write_rds("./data/02_display/historic_stage1.rds")
 
 prep_data %>% 
   prep_display_data_stage2 %>%
-  write_rds("./data/04_historic_display/stage2.rds")
+  write_rds("./data/02_display/historic_stage2.rds")

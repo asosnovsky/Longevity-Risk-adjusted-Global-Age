@@ -1,3 +1,17 @@
+#############################
+# This files runs the analysis for
+# data between the years of 1900 to 2011
+# I included the ability to this on multiple cpu-cores
+# However the default will only use 1-cpu core to aviod complexity
+# (to use multiple cpu-cores change the function in line 55 %do% to %dopar% and set the value
+#  on line 40 in the function registerDoMC to the number of cpus in your machine
+#  please do not run anything on your computer while its running like this!!)
+#
+# without optimization on multiple-cores expect this script to run for 8 hours
+# if the script fails at any moment, do not worry, it keeps backups on your hard-disk
+# so you can always pause and resume!
+#############################
+
 # Clear memory
 rm(list=ls())
 
@@ -22,8 +36,6 @@ dataset %>%
   mutate( qx = case_when(qx >= 0.98 ~ 0.98, T ~ qx) ) -> 
   fdataset
 
-# filter(!(Country %in% c("LUX", "ISL", "BGR", "CHL", "BEL")))
-
 # init parallel compute
 registerDoMC(2)
 
@@ -34,7 +46,7 @@ registerDoMC(2)
 grps = fdataset %>% distinct(Country, Year)
 
 # Fit model
-save_data_path = "./data/03_historic/stage1/"
+save_data_path = "./data/02_models/historic_stage1/"
 out = foreach(
   i = 1:nrow(grps), 
   .errorhandling='pass', 
@@ -72,5 +84,5 @@ Stage1_model <- lapply(grps, function(grp) {
 }) %>% reduce(bind_rows)
 
 # Save stage-1-
-Stage1_model %>% write_rds("./data/03_historic/stage1-lg.rds")
+Stage1_model %>% write_rds("./data/02_models/historic-stage1.rds")
 rm(grps)

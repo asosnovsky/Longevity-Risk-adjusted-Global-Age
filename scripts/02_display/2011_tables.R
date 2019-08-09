@@ -23,15 +23,15 @@ Stage1_model %>% mutate( l_m = paste0(l_m*1E5) ) %>%
 
 for (gender in Stage1_model$Gender %>% unique) {
   Table1 %>% filter( Gender == gender ) %>%
-    write_csv(paste0("./data/02_paper_tables/table_1_", gender, '.csv'))
+    write_csv(paste0("./data/02_display/table_1_", gender, '.csv'))
 }
 
 # Table 2
 Stage2_model %>% compute_table2 -> Table2
-write_csv(Table2, "./data/02_paper_tables/table2.csv")
+write_csv(Table2, "./data/02_display/table2.csv")
 
 # Table 3
 Stage3_model %>% compute_table3 ->
   Table3
 
-write_csv(Table3, "./data/02_paper_tables/table3.csv")
+write_csv(Table3, "./data/02_display/table3.csv")

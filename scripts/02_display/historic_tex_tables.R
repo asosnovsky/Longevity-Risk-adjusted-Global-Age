@@ -5,7 +5,7 @@ rm(list=ls())
 library(readr)
 
 # Read in the modelled data
-Stage1_model <- read_rds("./data/04_historic_display/stage1.rds")
+historic_stage1 <- read_rds("./data/02_models/historic-stage1.rds")
 Stage2_model <- read_rds("./data/04_historic_display/stage2.rds")
 
 # Constants
