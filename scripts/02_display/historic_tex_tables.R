@@ -5,8 +5,8 @@ rm(list=ls())
 library(readr)
 
 # Read in the modelled data
-historic_stage1 <- read_rds("./data/02_models/historic-stage1.rds")
-Stage2_model <- read_rds("./data/04_historic_display/stage2.rds")
+Stage1_model <- read_rds("./data/02_display/historic_stage1.rds")
+Stage2_model <- read_rds("./data/02_display/historic_stage2.rds")
 
 # Constants
 out_folder = "./reports/Historical Modelling/"

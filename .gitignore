@@ -14,4 +14,6 @@ notes*
 data/00_raw/death_rates/**/*.txt
 data/00_raw/cdeath_rates/**/*.txt
 data/02_models/historic_stage1/*.rds
+data/02_models/historic*.rds
+data/02_display/historic*.rds
 scripts/_*.R

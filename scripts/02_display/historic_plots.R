@@ -41,8 +41,7 @@ full_join(
   prep_data1900 %>% distinct(`Country Name`) %>% mutate(in1900=T),
   prep_data1945 %>% distinct(`Country Name`) %>% mutate(in1945=T)
 ) %>% mutate(in1900 = replace(in1900, is.na(in1900), F)) %>%
-  write_csv("data/03_historic/countries_avail.csv")
-#%>% select(`Country Name`)
+  View("Countries Used")
 
 # =====================
 # Figure 5
