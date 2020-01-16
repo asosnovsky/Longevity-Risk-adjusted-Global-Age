@@ -23,27 +23,27 @@ convert_stat_latex = ~paste0(
 )
 # prep data
 Stage1_model %>% select(-c(data)) %>%
-  group_by(Year, Gender, stat) %>% nest %>%
-  spread(stat, data) %>%
+  group_by(Year, Gender, stat) %>% nest %>% ungroup() %>%
+  pivot_wider(names_from=stat, values_from=data) %>%
   mutate(
     latex_b = map_chr(`b`, convert_stat_latex),
     latex_m = map_chr(`m`, convert_stat_latex),
     latex_lnh = map_chr(`lnh`, convert_stat_latex)
   ) %>%
   group_by(Year, Gender) %>% nest %>%
-  spread(Gender, data) ->
+  pivot_wider(names_from=Gender, values_from=data) ->
   s1_prep
 
 Stage2_model %>% select(-c(data, model)) %>%
   group_by(Year, Gender, stat) %>% nest %>%
-  spread(stat, data) %>%
+  pivot_wider(names_from=stat, values_from=data) %>%
   mutate(
     latex_x = map_chr(`x*`, convert_stat_latex),
     latex_L = map_chr(`L`, convert_stat_latex),
     latex_G = map_chr(G, ~paste0(" $", number(.$value, acc=0.0001), "$"))
   ) %>%
   group_by(Year, Gender) %>% nest %>%
-  spread(Gender, data) ->
+  pivot_wider(names_from=Gender, values_from=data) ->
   s2_prep
 
 # Table 5a

@@ -89,6 +89,7 @@ compute_stage3 <- function(stage2_model) stage2_model %>%
     `x* - higher` = `x*` + 2*x_stdev,
     `x* - lower` = `x*` - 2*x_stdev,
   ) %>% 
+  select(-model) %>%
   unnest(data) %>% 
   mutate(  ki = (g/G)-1 ) %>% unnest(data) %>% 
   mutate(
