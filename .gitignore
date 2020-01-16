@@ -18,3 +18,5 @@ data/02_models/historic*.rds
 data/02_display/historic*.rds
 scripts/_*.R
 scripts/**/_*.R
+packrat/lib*/
+packrat/src/
