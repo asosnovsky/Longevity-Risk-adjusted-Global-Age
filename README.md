@@ -1,6 +1,13 @@
 # Mortality-Adj-Bio-Age-Around-the-world
 Implementation of Moshe A. Milvesky's paper "Calibrating Gompertz in Reverse: Mortality Adjusted Biological Age around the World"
 
+# Prerequisite
+
+- Install R and R studio
+- Install the [packrat](https://rstudio.github.io/packrat/) library (`install.packages("packrat")`)
+- Open Rstudio using the `Mosh-Book.Rproj` file
+- Run `packrat::init()`
+
 # Folder Structure
 
 ## Scripts
