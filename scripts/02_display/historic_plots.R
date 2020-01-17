@@ -18,12 +18,6 @@ pretty_names_s2 <- function(s2) s2 %>% mutate( stat = case_when(
   stat == "L" ~ "Intercept (L)",
   stat == "G" ~ "Mortality Growth Rate (G)"
 ))
-save_plots <- function(p, name="images/fig") {
-  postscript(paste0(name, ".eps"), family = "serif")
-  plot(p)
-  dev.off()
-  ggsave(paste0(name, ".jpg"), plot = p)
-}
 
 # 1947
 Stage1_model %>% 

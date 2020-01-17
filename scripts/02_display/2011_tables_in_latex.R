@@ -107,19 +107,12 @@ table1_latex <- function(Stage1_model) {
         Gender == "Female" ~ latex_footer("lab2"),
         Gender == "Total" ~ latex_footer("labX")
       )
-    ) %>% 
-    apply(1, function(grp) {
-      paste0(
-        grp$header[[1]],
-        grp$num_latex[[1]],
-        grp$avg_latex, "\\\\ \\hline\n",
-        grp$footer[[1]]
-      )
-    })
+    ) -> tmp
+  paste0(tmp$header, tmp$num_latex, tmp$avg_latex, "\\\\ \\hline\n", tmp$footer)
 }
 table2_latex <- function(Stage2_model) {
   
-  tabulate_coef <- function(coef, bold_est=F) coef %>% as.data.frame() %>% t %>% as.tibble %>% 
+  tabulate_coef <- function(coef, bold_est=F) coef %>% as.data.frame() %>% t %>% as_tibble %>% 
     mutate_all(~number(., acc=0.001)) %>% 
     mutate( Estimate = if_else(bold_est, paste0( "{\\bf", Estimate, "}" ), Estimate) ) %>% 
     unite(latex, Estimate, `Std. Error`, `t value`, sep = ' & ')

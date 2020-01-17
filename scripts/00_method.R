@@ -192,6 +192,15 @@ prep_display_data_stage1 <- function(s1) s1 %>%
     lower = value - 2*std
   )
 
+### This function saves a ggplot in jpg, eps, ps and png format
+save_plots <- function(p, name="images/fig") {
+  dir.create(dirname(name), recursive=T)
+  postscript(paste0(name, ".eps"), family = "serif")
+  ggsave(paste0(name, ".jpg"), plot = p)
+  ggsave(paste0(name, ".png"), plot = p)
+  ggsave(paste0(name, ".ps"), plot = p)
+}
+
 
 ### This function takes the output of `compute_stage1` and provide a table with 
 ### the variables `L` `x*` and `G` with their confidence intervals
