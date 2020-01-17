@@ -28,10 +28,11 @@ Stage1_model %>% inner_join(country_codes, by="Country Name") %>%
   ggplot(aes(`g[i]`, `lnh[i]`)) + geom_point(color='red') +
   geom_smooth(size=1/4, method='lm', se=F, col='black') +
   geom_text(aes(label=`CountryCode`), size=2, nudge_x=-.0007) +
+  labs(x="Mortality Growth Rate", y='Log of Initial Mortality Rate') + 
   ggtitle("Female") +
   theme(plot.title = element_text(hjust = 0.5))
 
-ggsave(paste0(dir_save, "fig1_female.png"))
+ggsave(paste0(dir_save, "fig1_female.ps"))
 
 Stage1_model %>% inner_join(country_codes, by="Country Name") %>% 
   filter(Gender == "Male") %>% 
@@ -39,11 +40,12 @@ Stage1_model %>% inner_join(country_codes, by="Country Name") %>%
   ggplot(aes(`g[i]`, `lnh[i]`)) + geom_point(color='blue') +
   geom_smooth(size=1/4, method='lm', se=F, col='black') +
   geom_text(aes(label=`CountryCode`), size=2, nudge_x=-.0007) +
+  labs(x="Mortality Growth Rate", y='Log of Initial Mortality Rate') + 
   ggtitle("Male") +
   theme(plot.title = element_text(hjust = 0.5))
 
 
-ggsave(paste0(dir_save, "fig1_male.png"))
+ggsave(paste0(dir_save, "fig1_male.ps"))
 
 Stage3_model %>% filter(Age == 55) %>% 
   filter(Gender == "Female") %>%  
@@ -61,7 +63,7 @@ Stage3_model %>% filter(Age == 55) %>%
   ggtitle("FEMALE: Chronological Age 55") +
   theme(plot.title = element_text(hjust = 0.5))
 
-ggsave(paste0(dir_save, "fig2_female.png"))
+ggsave(paste0(dir_save, "fig2_female.ps"))
 
 Stage3_model %>% filter(Age == 55) %>% 
   filter(Gender == "Male") %>%  
@@ -80,4 +82,4 @@ Stage3_model %>% filter(Age == 55) %>%
   theme(plot.title = element_text(hjust = 0.5))
 
 
-ggsave(paste0(dir_save, "fig2_male.png"))
+ggsave(paste0(dir_save, "fig2_male.ps"))
