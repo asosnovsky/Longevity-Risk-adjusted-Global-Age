@@ -20,3 +20,4 @@ scripts/_*.R
 scripts/**/_*.R
 packrat/lib*/
 packrat/src/
+build
