@@ -19,4 +19,4 @@ done
 rm build/tables/*aux
 rm build/tables/*log
 
-# zip -r -9 package_$(date +%Y_%m_%d_%H_%M).zip build/*
+zip -r -9 package_$(date +%Y_%m_%d_%H_%M).zip build/*

@@ -38,7 +38,7 @@ full_join(
   View("Countries Used")
 
 # Clear Folder
-clear_folder(images/figure-5/)
+clear_folder("images/figure-5/")
 
 # =====================
 # Figure 5 - no titles
