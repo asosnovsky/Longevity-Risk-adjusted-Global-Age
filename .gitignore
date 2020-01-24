@@ -6,8 +6,9 @@
 **.fdb*
 **.log
 **.gz
-data/00_raw/full_qx_cdata.csv
-data/01_processed/full_qx_data.csv
+data
+!data/00_raw/country_codes.csv
+!*.gitkeep
 *test*
 paper
 notes*
@@ -21,3 +22,6 @@ scripts/**/_*.R
 packrat/lib*/
 packrat/src/
 build
+images/*
+reports/*
+Rplots.ps

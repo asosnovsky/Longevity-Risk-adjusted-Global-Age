@@ -32,7 +32,7 @@ save_plots(
     labs(x="Mortality Growth Rate", y='Log of Initial Mortality Rate') + 
     ggtitle("Female") +
     theme(plot.title = element_text(hjust = 0.5)), 
-  "images/figure-3/female/fig3a"
+  "images/figure-3/f3a/f3a-lnh_vs_g-female"
 )
 
 save_plots(
@@ -45,7 +45,7 @@ save_plots(
     labs(x="Mortality Growth Rate", y='Log of Initial Mortality Rate') + 
     ggtitle("Male") +
     theme(plot.title = element_text(hjust = 0.5)),
-  "images/figure-3/male/fig3b"
+  "images/figure-3/f3b/fig3b-lnh_vs_g-male"
 )
 
 save_plots(
@@ -64,7 +64,7 @@ save_plots(
     geom_vline(xintercept = 55, linetype="dotted") +
     ggtitle("FEMALE: Chronological Age 55") +
     theme(plot.title = element_text(hjust = 0.5)),
-  "images/figure-4/female/fig4a"
+  "images/figure-4/f4a/f4a-age-female"
 )
 
 save_plots(
@@ -83,5 +83,5 @@ save_plots(
     geom_vline(xintercept = 55, linetype="dotted")+
     ggtitle("MALE: Chronological Age 55") +
     theme(plot.title = element_text(hjust = 0.5)),
-    "images/figure-4/male/fig4b"
+    "images/figure-4/f4b/f4b-age-male"
 )

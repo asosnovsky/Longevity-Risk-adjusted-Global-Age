@@ -3,15 +3,50 @@ rm(list=ls())
 
 # Load used libraries
 library(readr)
+source("./scripts/00_method.R")
 
 # Read in the modelled data
 Stage1_model <- read_rds("./data/02_display/historic_stage1.rds")
 Stage2_model <- read_rds("./data/02_display/historic_stage2.rds")
 
 # Constants
-out_folder = "./reports/Historical Modelling/"
-table4a_loc <- paste0(out_folder, "table4a.txt")
-table4b_loc <- paste0(out_folder, "table4b.txt")
+out_file = "./reports/Historical_Tables/Historic-Tables.tex"
+clear_folder(dirname(out_file))
+
+
+# =====================
+# File Header
+# =====================
+cat(
+  "\\documentclass[10pt, titlepage]{article}%
+\\author{Ariel Sosnovsky}
+\\usepackage{longtable}
+\\usepackage{graphicx}
+
+\\begin{document}
+\\title{Historic Modelling}
+\\maketitle
+
+\\clearpage
+
+\\begin{table}
+  \\begin{center}
+  \\begin{tabular}{||l|c|c|c|c||}
+  \\hline\\hline
+  \\multicolumn{5}{||c||}{Table \\# 4a } \\\\ \\hline\\hline
+  \\multicolumn{5}{||c||}{{\\bf Gompertz Regression: Historical Coefficients}} \\\\ \\hline\\hline
+  
+  { } & 
+  \\multicolumn{2}{|c|}{ \\bf Dispersion Coefficient $m$ } & 
+  \\multicolumn{2}{|c|}{ \\bf Modal Value $b$ }\\\\ \\hline\\hline
+  
+  {\\bf Year } &
+  {MALE} & {FEMALE} &
+  {MALE} & {FEMALE} \\\\ \\hline\\hline
+",
+  file=out_file 
+)
+
 
 # =====================
 # Table 4
@@ -19,7 +54,7 @@ table4b_loc <- paste0(out_folder, "table4b.txt")
 # Utils method
 convert_stat_latex = ~paste0(
   "$\\bf ", number(.$value, acc=0.01), "$ ",
-  "$\\pm ", number(.$std, acc=0.01), "$"
+  "$\\pm ", number(2*.$std, acc=0.01), "$"
 )
 # prep data
 Stage1_model %>% select(-c(data)) %>%
@@ -47,7 +82,6 @@ Stage2_model %>% select(-c(data, model)) %>%
   s2_prep
 
 # Table 5a
-file.remove(table4a_loc)
 s1_prep %>%
   mutate(
     latex = paste0(
@@ -60,12 +94,40 @@ s1_prep %>%
   select(Year, latex) %>%
   filter( Year %in% seq(1945, 2011, by=3) ) %>%
   apply(1, function(r) {
-    cat(r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
-        file=table4a_loc, append = T)
+    cat("  ", r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
+        file=out_file, append = T)
   })
 
-# Table 5a
-file.remove(table4b_loc)
+# In between area
+cat("              
+\\multicolumn{5}{||r||}{{\\em Source: Human Mortality Database, Period 1945-2011, 15 Countries}} \\\\ \\hline\\hline
+\\end{tabular}
+\\label{table5a}
+
+Note: The table displays two standard errors for each statistic.
+\\end{center}
+\\end{table}
+
+\\begin{table}
+  \\begin{center}
+  \\begin{tabular}{||l|c|c|c|c|c|c||}
+  \\hline\\hline
+  \\multicolumn{7}{||c||}{Table \\# 4b } \\\\ \\hline\\hline
+  \\multicolumn{7}{||c||}{{\\bf CLaM Regression: Historical Coefficients}} \\\\ \\hline\\hline
+  
+  { } & 
+  \\multicolumn{2}{|c|}{ \\bf Slope: $(x^{*})$ } & 
+  \\multicolumn{2}{|c|}{ \\bf Intercept $(L)$ }  &
+  \\multicolumn{2}{|c||}{ \\bf Mortality Rate $(G)$ } \\\\ \\hline\\hline
+  
+  {\\bf Year } &
+  {MALE} & {FEMALE} &
+  {MALE} & {FEMALE} &
+  {MALE} & {FEMALE} \\\\ \\hline\\hline
+
+", file=out_file, append=T)
+
+# Table 5b
 s2_prep %>%
   mutate(
     latex = paste0(
@@ -80,6 +142,21 @@ s2_prep %>%
   select(Year, latex) %>%
   filter( Year %in% seq(1945, 2011, by=3) ) %>%
   apply(1, function(r) {
-    cat(r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
-        file=table4b_loc, append = T)
+    cat("  ", r[["Year"]], "& ", r[["latex"]], "\\\\ \\hline\\hline\n", 
+        file=out_file, append = T)
   })
+
+# Footer
+cat("        
+\\multicolumn{7}{||r||}{{\\em Source: Human Mortality Database, Period 1945-2011, 15 Countries}} \\\\ \\hline\\hline
+\\end{tabular}
+\\label{table5a}
+
+Note: The table displays two standard errors for each statistic.
+\\end{center}
+\\end{table}
+
+\\end{document}",
+file = out_file,
+append = T
+)

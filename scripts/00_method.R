@@ -24,6 +24,14 @@ apply_filters <- function(dt, from_year, to_year, delta_year) {
     unnest(data)
 }
 
+### This function clears a folder and all of its files below it
+### It will also recreate the folder (but empty)
+clear_folder <- function(folder_path) {
+  if (dir.exists(folder_path)) { unlink(folder_path, recursive=T) }
+  dir.create(folder_path, recursive=T)
+}
+
+
 ## Section 2 - Model Functions
 
 ### This function computes the result of the first regression, 
@@ -75,28 +83,40 @@ compute_stage2 <- function(stage1_model) stage1_model %>% nest %>%
     # Extract computed params
     L = map_dbl(model, ~.$coefficients[1,1]),
     `x*` = -map_dbl(model, ~.$coefficients[2,1]),
-    G = map_dbl(data, ~mean(.$g))
+    `l*` = exp(L),
+    G = map_dbl(data, ~mean(.$g)),
+    LMD = map_dbl(data, ~mean(.$l_m))
   )
 
 ### This function will take the results of the `compute_stage2` function
 ### and will compute the third and fourth stages as described in the paper
 ###   - first it will exctract the standard errors for x*
-###   - then it will compute a parameter k_i
-###   - lastly it will be the extracted information to compute Biological Age
+###   - lastly it will use the extracted information to compute Biological Age
+b_age <- function(`x*`, x, g, G, LMD, l_m, `l*`) {
+  lhs = exp(g*(x-`x*`))
+  ki = (LMD - l_m)/`l*`
+  `x*` + (1/G) * log( lhs - ki )
+}
 compute_stage3 <- function(stage2_model) stage2_model %>% 
   mutate(
     x_stdev = map_dbl(model, ~.$coefficients[2,2]),
-    `x* - higher` = `x*` + 2*x_stdev,
-    `x* - lower` = `x*` - 2*x_stdev,
+    L_stdev = map_dbl(model, ~.$coefficients[1,2]),
+    x_higher = `x*` + 2*x_stdev,
+    x_lower = `x*` - 2*x_stdev,
+    l_higher = exp(L + 2*L_stdev),
+    l_lower = exp(L - 2*L_stdev),
   ) %>% 
   select(-model) %>%
   unnest(data) %>% 
-  mutate(  ki = (g/G)-1 ) %>% unnest(data) %>% 
+  unnest(data) %>% 
   mutate(
-    B_Age = Age - ki*(`x*`-Age),
-    B_Age_Upper = Age - ki*(`x* - higher`-Age),
-    B_Age_Lower = Age - ki*(`x* - lower`-Age)
-  ) -> Stage3_model
+    B_Age = b_age(`x*`, Age, g, G, LMD, l_m, `l*`),
+    B_Age_Upper = b_age(x_higher, Age, g, G, LMD, l_m, l_higher),
+    B_Age_Lower = b_age(x_lower, Age, g, G, LMD, l_m, l_lower)
+  ) %>%
+  select(
+    -c(x_higher, x_lower, l_higher, l_lower)
+  )
 
 ## Section 3 - "Prettifying Functions"
 ## The functions in this section simply modify the extraction of various stages
@@ -194,11 +214,10 @@ prep_display_data_stage1 <- function(s1) s1 %>%
 
 ### This function saves a ggplot in jpg, eps, ps and png format
 save_plots <- function(p, name="images/fig") {
-  dir.create(dirname(name), recursive=T)
-  postscript(paste0(name, ".eps"), family = "serif")
+  clear_folder(dirname(name))
   ggsave(paste0(name, ".jpg"), plot = p)
   ggsave(paste0(name, ".png"), plot = p)
-  ggsave(paste0(name, ".ps"), plot = p)
+  ggsave(paste0(name, ".ps"), plot = p + theme_classic(base_family = "Helvetica"))
 }
 
 

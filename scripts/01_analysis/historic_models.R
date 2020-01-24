@@ -47,6 +47,7 @@ grps = fdataset %>% distinct(Country, Year)
 
 # Fit model
 save_data_path = "./data/02_models/historic_stage1/"
+clear_folder(save_data_path)
 out = foreach(
   i = 1:nrow(grps), 
   .errorhandling='pass', 

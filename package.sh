@@ -1,21 +1,22 @@
 #!/bin/bash
 
-set -e
 
 mkdir -p build
 rm -r build/*
+
+set -e
 mkdir build/tables
+mkdir -p build/images/{postscript,jpg}
 
-cp -r images build/images
+cp -r images/figure-{3..5}/**/*.jpg build/images/jpg
+cp -r images/figure-{3..5}/**/*.ps build/images/postscript
 
-mkdir -p build/tables/MABA_Tables_Revised
-pdflatex -output-directory="reports/Revised Tables/" "reports/Revised Tables/MABA_Tables_Revised_Ariel.tex"
-cp "reports/Revised Tables/MABA_Tables_Revised_Ariel.tex" build/tables/MABA_Tables_Revised
-cp "reports/Revised Tables/MABA_Tables_Revised_Ariel.pdf" build/tables/MABA_Tables_Revised
+for subf in ./reports/**/*.tex; do
+    pdflatex -output-directory=./build/tables $subf
+    cp $subf ./build/tables/$(basename $subf)
+done
 
-mkdir -p build/tables/Tables-4
-pdflatex -output-directory="reports/Historical Modelling/" "reports/Historical Modelling/Historic.tex"
-cp "reports/Historical Modelling/Historic.tex" build/tables/Tables-4
-cp "reports/Historical Modelling/Historic.pdf" build/tables/Tables-4
+rm build/tables/*aux
+rm build/tables/*log
 
-zip -r -9 -m package_$(date +%Y_%m_%d_%H_%M).zip build/*
+# zip -r -9 package_$(date +%Y_%m_%d_%H_%M).zip build/*

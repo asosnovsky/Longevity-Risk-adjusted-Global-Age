@@ -20,7 +20,8 @@ Stage2_model <- read_rds("./data/02_models/stage2.rds")%>% filter( Gender != "To
 Stage3_model <- read_rds("./data/02_models/stage3.rds")%>% filter( Gender != "Total" )
 
 # Output file
-out_file = "reports/Revised\ Tables/MABA_Tables_Revised_Ariel.tex"
+out_file = "reports/2011_Tables/2011_Tables.tex"
+clear_folder(dirname(out_file))
 
 # Methods
 table1_latex <- function(Stage1_model) {
@@ -66,7 +67,7 @@ table1_latex <- function(Stage1_model) {
   )
   
   
-  Stage1_model %>% 
+  Stage1_model %>% arrange(Year, Gender, `Country Name`) %>%
     group_by(Gender) %>% 
     mutate(
       idx = 1:n(),
@@ -107,7 +108,7 @@ table1_latex <- function(Stage1_model) {
         Gender == "Female" ~ latex_footer("lab2"),
         Gender == "Total" ~ latex_footer("labX")
       )
-    ) -> tmp
+    ) %>% arrange(desc(Gender)) -> tmp
   paste0(tmp$header, tmp$num_latex, tmp$avg_latex, "\\\\ \\hline\n", tmp$footer)
 }
 table2_latex <- function(Stage2_model) {
@@ -238,7 +239,6 @@ table3_latex <- function(Stage3_model) {
 }
 
 # Write Table
-file.remove(out_file)
 cat(
   "\\documentclass[12pt, titlepage]{article}%\n",
   "\\author{Ariel Sosnovsky}\n",

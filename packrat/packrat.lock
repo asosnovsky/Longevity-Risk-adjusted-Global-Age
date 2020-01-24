@@ -28,6 +28,11 @@ Source: CRAN
 Version: 1.0.3
 Hash: 99f6a1855b2f9434e1399d565d2ed9df
 
+Package: Rttf2pt1
+Source: CRAN
+Version: 1.3.8
+Hash: 423c2ce5a03d99baef7b17d6d5b0dbe2
+
 Package: askpass
 Source: CRAN
 Version: 1.1
@@ -129,6 +134,17 @@ Package: evaluate
 Source: CRAN
 Version: 0.14
 Hash: 18306cc3bc1aec7b7360eea8a0eb0ee1
+
+Package: extrafont
+Source: CRAN
+Version: 0.17
+Hash: d9555d8cfe70b3372d066648400770b5
+Requires: Rttf2pt1, extrafontdb
+
+Package: extrafontdb
+Source: CRAN
+Version: 1.0
+Hash: 72269616f582dc675c90ecd025af2754
 
 Package: fansi
 Source: CRAN
