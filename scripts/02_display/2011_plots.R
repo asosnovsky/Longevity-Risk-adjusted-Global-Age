@@ -51,16 +51,14 @@ save_plots(
 save_plots(
   Stage3_model %>% filter(Age == 55) %>% 
     filter(Gender == "Female") %>%  
-    arrange(-B_Age_Lower) %>% 
+    arrange(-B_Age) %>% 
     mutate(
       Country = as_factor(Country)
     ) %>% 
-    ggplot() + geom_crossbarh(aes(
+    ggplot() + geom_point(aes(
       y = Country,
-      xmin = B_Age_Lower,
-      xmax = B_Age_Upper,
       x = B_Age
-    ), size=0.15, fill='#0a0a0a') +
+    ), size=1, fill='#0a0a0a') +
     geom_vline(xintercept = 55, linetype="dotted") +
     ggtitle("FEMALE: Chronological Age 55") +
     theme(plot.title = element_text(hjust = 0.5)),
@@ -70,16 +68,14 @@ save_plots(
 save_plots(
   Stage3_model %>% filter(Age == 55) %>% 
     filter(Gender == "Male") %>%  
-    arrange(-B_Age_Lower) %>% 
+    arrange(-B_Age) %>% 
     mutate(
       Country = as_factor(Country)
     ) %>% 
-    ggplot() + geom_crossbarh(aes(
+    ggplot() + geom_point(aes(
       y = Country,
-      xmin = B_Age_Lower,
-      xmax = B_Age_Upper,
       x = B_Age
-    ), size=0.15 , fill='#0a0a0a') +
+    ), size=1 , fill='#0a0a0a') +
     geom_vline(xintercept = 55, linetype="dotted")+
     ggtitle("MALE: Chronological Age 55") +
     theme(plot.title = element_text(hjust = 0.5)),
