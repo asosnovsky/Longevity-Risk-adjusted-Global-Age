@@ -6,9 +6,7 @@ set.seed(0)
 
 # Load used libraries
 library(readr)
-library(tidyverse)
 library(broom)
-library(scales)
 source("./scripts/00_method.R")
 
 # Read in the merged dataset for 2011
