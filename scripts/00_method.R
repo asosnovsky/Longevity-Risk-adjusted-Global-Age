@@ -42,7 +42,8 @@ compute_model1 <- function(dt, lambda_makeham) dt %>%
   mutate( y = log(l-lambda_makeham) ) %>% nest %>% 
   mutate(
     # Fit model
-    model = map(data, ~summary(lm(y~Age ,data=.))),
+    raw_model = map(data, ~lm(y~Age ,data=.)),
+    model = map(raw_model, summary),
     # Extracts params
     l_m = lambda_makeham,
     params = map(model, ~tibble(
@@ -213,11 +214,34 @@ prep_display_data_stage1 <- function(s1) s1 %>%
   )
 
 ### This function saves a ggplot in jpg, eps, ps and png format
-save_plots <- function(p, name="images/fig") {
+save_plots <- function(p, name="images/fig", clean_folder=T, exts=c('.jpg', '.png', '.ps'), ...) {
+  if(clean_folder) clear_folder(dirname(name))
+  for (ext in exts) {
+    if(tolower(ext) == ".ps") {
+      ggsave(paste0(name, ".ps"), plot = p + theme_classic(base_family = "Helvetica"), ...)
+    }else{
+      ggsave(paste0(name, ext), plot = p)
+    }
+  }
+}
+
+save_plots_by_group <- function(
+  grp_data, 
+  plot_fcn, 
+  just_plot=FALSE, 
+  name="images/fig", 
+  exts=c('.jpg', '.png', '.ps'),
+  ...
+) {
   clear_folder(dirname(name))
-  ggsave(paste0(name, ".jpg"), plot = p)
-  ggsave(paste0(name, ".png"), plot = p)
-  ggsave(paste0(name, ".ps"), plot = p + theme_classic(base_family = "Helvetica"))
+  grp_data %>% group_map(function(grp, key) {
+    p <- plot_fcn(grp, key)
+    if (just_plot) {
+      plot(p)
+    } else {
+      save_plots(p, name = paste0(name, "_", key), clean_folder=F, exts=exts, ...)
+    }
+  })
 }
 
 
