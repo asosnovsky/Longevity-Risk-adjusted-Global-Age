@@ -1,1 +1,8 @@
 package_2020_01_23_23_04.zip filter=lfs diff=lfs merge=lfs -text
+data/00_raw/2011_qx_data.csv filter=lfs diff=lfs merge=lfs -text
+data/00_raw/country_codes.csv filter=lfs diff=lfs merge=lfs -text
+data/00_raw/full_qx_data.csv filter=lfs diff=lfs merge=lfs -text
+data/01_models/historic-stage1.rds filter=lfs diff=lfs merge=lfs -text
+data/01_models/stage1.rds filter=lfs diff=lfs merge=lfs -text
+data/01_models/stage2.rds filter=lfs diff=lfs merge=lfs -text
+data/01_models/stage3.rds filter=lfs diff=lfs merge=lfs -text
