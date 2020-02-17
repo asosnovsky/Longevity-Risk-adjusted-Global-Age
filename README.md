@@ -1,4 +1,4 @@
-# Mortality-Adj-Bio-Age-Around-the-world
+# Longevity-Risk-adjusted Global Age
 Implementation of "Calibrating Gompertz in Reverse: What is Your Longevity-Risk-adjusted Global Age", By: Moshe A. Milevsky
 
 # Prerequisite
