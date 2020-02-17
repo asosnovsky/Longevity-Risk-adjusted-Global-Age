@@ -19,7 +19,7 @@ packrat/src/
 # Data
 data/*/*
 !data/*/.gitkeep
-!data/00_raw/country_codes.csv
+!data/00_raw/*.csv
 
 # Builds
 build
