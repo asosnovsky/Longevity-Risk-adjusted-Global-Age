@@ -28,7 +28,9 @@ After you have cloned the source-code from github, make sure to run `git lfs pul
     - [01_plots_historic.R](scripts/02_display/01_plots_historic.R): plots for the models from 1945 to 2011
     - [01_tables_2011.R](scripts/02_display/01_tables_2011.R): tables 1/2/3 in latex form
     - [01_tables_historic.R](scripts/02_display/01_tables_historic.R): historical tables from 1945 to 2011
-- [03_errors](scripts/04_errors): error analysis plots
+- [03_errors](scripts/03_errors.R): error analysis plots
+- [03_1st_reg_r2](scripts/03_1st_reg_r2.R): extraction of r2 values for first regression
+
 
 ## Data
 - [00_raw](data/00_raw): this folders contain direct data from mortality.org, to replicate or update the data with an updated version of the same data see [construct_dataset.R](scripts/00_data/construct_dataset.R). 
