@@ -93,7 +93,7 @@ compute_stage2 <- function(stage1_model) stage1_model %>% nest %>%
 ### and will compute the third and fourth stages as described in the paper
 ###   - first it will exctract the standard errors for x*
 ###   - lastly it will use the extracted information to compute Biological Age
-b_age <- function(`x*`, x, g, G, LMD, l_m, `l*`) {
+LRAG_age <- function(`x*`, x, g, G, LMD, l_m, `l*`) {
   lhs = exp(g*(x-`x*`))
   ki = (LMD - l_m)/`l*`
   `x*` + (1/G) * log( lhs - ki )
@@ -111,9 +111,9 @@ compute_stage3 <- function(stage2_model) stage2_model %>%
   unnest(data) %>% 
   unnest(data) %>% 
   mutate(
-    B_Age = b_age(`x*`, Age, g, G, LMD, l_m, `l*`),
-    B_Age_Upper = b_age(x_higher, Age, g, G, LMD, l_m, l_higher),
-    B_Age_Lower = b_age(x_lower, Age, g, G, LMD, l_m, l_lower)
+    LRAG_Age = LRAG_age(`x*`, Age, g, G, LMD, l_m, `l*`),
+    LRAG_Age_Upper = LRAG_age(x_higher, Age, g, G, LMD, l_m, l_higher),
+    LRAG_Age_Lower = LRAG_age(x_lower, Age, g, G, LMD, l_m, l_lower)
   ) %>%
   select(
     -c(x_higher, x_lower, l_higher, l_lower)
@@ -154,8 +154,8 @@ compute_table2 <- function(stage2_model) stage2_model %>% mutate(params = map(mo
 compute_table3 <- function(stage3_model) stage3_model %>% 
   filter( Age %in% c(55, 70, 85) ) %>% 
   mutate( Age = paste0(Gender, "\n", "x = ", Age) )  %>% 
-  select(`Country Name`, Age, B_Age) %>% 
-  spread(Age, B_Age) %>% 
+  select(`Country Name`, Age, LRAG_Age) %>% 
+  spread(Age, LRAG_Age) %>% 
   mutate_if(is.numeric, ~round(., 3))
 
 compute_s2_param_list <- function(stage2_model) stage2_model %>%

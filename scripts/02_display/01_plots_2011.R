@@ -51,13 +51,13 @@ save_plots(
 save_plots(
   Stage3_model %>% filter(Age == 55) %>% 
     filter(Gender == "Female") %>%  
-    arrange(-B_Age) %>% 
+    arrange(-LRAG_Age) %>% 
     mutate(
       Country = as_factor(Country)
     ) %>% 
     ggplot() + geom_point(aes(
       y = Country,
-      x = B_Age
+      x = LRAG_Age
     ), size=1, fill='#0a0a0a') +
     geom_vline(xintercept = 55, linetype="dotted") +
     ggtitle("FEMALE: Chronological Age 55") +
@@ -68,13 +68,13 @@ save_plots(
 save_plots(
   Stage3_model %>% filter(Age == 55) %>% 
     filter(Gender == "Male") %>%  
-    arrange(-B_Age) %>% 
+    arrange(-LRAG_Age) %>% 
     mutate(
       Country = as_factor(Country)
     ) %>% 
     ggplot() + geom_point(aes(
       y = Country,
-      x = B_Age
+      x = LRAG_Age
     ), size=1 , fill='#0a0a0a') +
     geom_vline(xintercept = 55, linetype="dotted")+
     ggtitle("MALE: Chronological Age 55") +

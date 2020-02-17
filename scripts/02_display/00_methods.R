@@ -167,9 +167,9 @@ table2_latex <- function(Stage2_model) {
 table3_latex <- function(Stage3_model) {
   Stage3_model %>% filter(Gender!="Total") %>%  
     filter( Age %in% c(55, 70, 85) ) %>%  
-    select(Gender, `Country Name`, Age, B_Age) %>% {
+    select(Gender, `Country Name`, Age, LRAG_Age) %>% {
       bind_rows(
-        spread(., Age, B_Age) %>% 
+        spread(., Age, LRAG_Age) %>% 
           mutate_if(is.numeric, ~paste0("$", number(., acc=0.01), "$")) %>% 
           unite(value, `55`, `70`, `85`, sep=" & ") %>% 
           spread(Gender, value) %>% 
@@ -177,8 +177,8 @@ table3_latex <- function(Stage3_model) {
           mutate(value = paste0(value, "\\\\ \\hline \\hline\n")) %>% 
           mutate(`Country Name` = paste0(1:n(), ". ", `Country Name`)),
         group_by(., Gender, Age) %>% 
-          summarise(B_Age = mean(B_Age) ) %>% 
-          spread(Age, B_Age) %>% ungroup %>%  
+          summarise(LRAG_Age = mean(LRAG_Age) ) %>% 
+          spread(Age, LRAG_Age) %>% ungroup %>%  
           mutate_if(is.numeric, ~paste0("{\\bf", number(., acc=0.01), "}")) %>% 
           unite(value, `55`, `70`, `85`, sep=" & ") %>% 
           spread(Gender, value) %>% 
