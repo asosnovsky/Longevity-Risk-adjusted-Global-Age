@@ -1,27 +1,28 @@
+
+# R 
 .Rproj.user
 .RData
 .Rhistory
+Rplots.ps
+
+# Packrat
+packrat/lib*/
+packrat/src/
+
+# Latex
 **.aux
 **.fls
 **.fdb*
 **.log
 **.gz
-data
-!data/00_raw/country_codes.csv
-!*.gitkeep
-*test*
-paper
-notes*
-data/00_raw/death_rates/**/*.txt
-data/00_raw/cdeath_rates/**/*.txt
-data/02_models/historic_stage1/*.rds
-data/02_models/historic*.rds
-data/02_display/historic*.rds
-scripts/_*.R
-scripts/**/_*.R
-packrat/lib*/
-packrat/src/
+
+# Data
+data/*/*
+!data/*/.gitkeep
+!data/01_processed/country_codes.csv
+
+# Builds
 build
 images/*
 reports/*
-Rplots.ps
+

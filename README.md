@@ -29,7 +29,7 @@ Implementation of "Calibrating Gompertz in Reverse: What is Your Longevity-Risk-
 - [04_errors](scripts/04_errors): error analysis plots
 
 ## Data
-- [00_raw](data/): this folder is not uploaded to here, instead I made the upload process is replicated in this script [construct_dataset.R](scripts/00_data/construct_dataset.R). 
+- [00_raw](data/00_raw): this folder is not uploaded to here, instead I made the upload process is replicated in this script [construct_dataset.R](scripts/00_data/construct_dataset.R). 
 - [01_processed](data/01_processed): this folder contains data extracted from the scripts prefixed with "00".
 - [02_models](data/02_models): the raw-results that each regression step generated are stored here, as well as the computation for B-Age.
 - [02_display](data/02_display): this is where the tables present in the paper are stored in csv format
