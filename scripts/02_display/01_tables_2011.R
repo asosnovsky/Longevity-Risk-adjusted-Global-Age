@@ -14,9 +14,9 @@ source("./scripts/02_display/00_methods.R")
 
 # Output file
 create_tables123_in_pdf(
-  Stage1_model = read_rds("./data/02_models/stage1.rds") %>% filter( Gender != "Total" ),
-  Stage2_model = read_rds("./data/02_models/stage2.rds") %>% filter( Gender != "Total" ),
-  Stage3_model = read_rds("./data/02_models/stage3.rds") %>% filter( Gender != "Total" ),
+  Stage1_model = read_rds("./data/01_models/stage1.rds") %>% filter( Gender != "Total" ),
+  Stage2_model = read_rds("./data/01_models/stage2.rds") %>% filter( Gender != "Total" ),
+  Stage3_model = read_rds("./data/01_models/stage3.rds") %>% filter( Gender != "Total" ),
   out_file = "reports/2011_Tables/2011_Tables.tex"
 )
 

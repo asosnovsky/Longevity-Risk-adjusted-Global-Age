@@ -13,13 +13,13 @@ library(scales)
 source("./scripts/00_method.R")
 
 # Read in the modelled data
-Stage1_model <- read_rds("./data/02_models/stage1.rds")%>% filter( Gender != "Total" )
-Stage2_model <- read_rds("./data/02_models/stage2.rds")%>% filter( Gender != "Total" )
-Stage3_model <- read_rds("./data/02_models/stage3.rds")%>% filter( Gender != "Total" )
+Stage1_model <- read_rds("./data/01_models/stage1.rds")%>% filter( Gender != "Total" )
+Stage2_model <- read_rds("./data/01_models/stage2.rds")%>% filter( Gender != "Total" )
+Stage3_model <- read_rds("./data/01_models/stage3.rds")%>% filter( Gender != "Total" )
 
 dir_save = "images/"
 
-country_codes = read_csv("./data/01_processed/country_codes.csv") %>% 
+country_codes = read_csv("./data/00_raw/country_codes.csv") %>% 
   rename(`Country Name` = CountryName)
 
 save_plots(

@@ -21,13 +21,13 @@ library(foreach)
 library(doMC)
 
 # Load Data
-dataset <- read_csv("./data/01_processed/full_qx_data.csv")
+dataset <- read_csv("./data/00_raw/full_qx_data.csv")
 
 # Clean up dataset
 dataset %>%
   # Filter dataset to expected range
   filter(between(Age, 35, 95)) %>%
-  filter(between(Year, 1900, 2011)) %>%
+  filter(between(Year, 1947, 2011)) %>%
   # Remove cases where qx == 0
   filter(qx > 0) %>%
   # Remove null cases
@@ -46,7 +46,7 @@ registerDoMC(2)
 grps = fdataset %>% distinct(Country, Year)
 
 # Fit model
-save_data_path = "./data/02_models/historic_stage1/"
+save_data_path = "./data/01_models/historic_stage1/"
 clear_folder(save_data_path)
 out = foreach(
   i = 1:nrow(grps), 
@@ -85,5 +85,4 @@ Stage1_model <- lapply(grps, function(grp) {
 }) %>% reduce(bind_rows)
 
 # Save stage-1-
-Stage1_model %>% write_rds("./data/02_models/historic-stage1.rds")
-rm(grps)
+Stage1_model %>% write_rds("./data/01_models/historic-stage1.rds")

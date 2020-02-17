@@ -6,8 +6,8 @@ source("./scripts/00_method.R")
 
 # Load Data
 
-Stage1_model = read_rds("./data/02_models/stage1.rds")
-Stage2_model = read_rds("./data/02_models/stage2.rds")
+Stage1_model = read_rds("./data/01_models/stage1.rds")
+Stage2_model = read_rds("./data/01_models/stage2.rds")
 
 # Make Plot Data
 inner_join(

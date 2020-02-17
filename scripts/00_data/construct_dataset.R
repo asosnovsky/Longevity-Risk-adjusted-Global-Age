@@ -43,17 +43,19 @@ parse_downloaded_zip <- function(fol, subfolder) {
   ) %>% reduce(bind_rows)
 }
 get_data_from_url <- function(link, subfolder, authorization = "Basic YXJpZWxAc29zbm92c2t5LmNhOmFsXFgoMkVfajszVzM=") {
-  temp <- tempfile()
+  
+  if (tolower(substr(readline(paste0("download the file `", basename(link) ,"`? (y/N): ")), 0, 1)) == "y") {
+    browseURL(link) 
+  }
+  
+  print(paste0("Please select where you downloaded `", basename(link), "` to? "))
+  fname <- file.choose()x
+  if (tolower(tools::file_ext(fname)) != "zip") {
+    stop("Invalif File Type")
+  }
   temp_fol <- paste0(tempdir(), "/", basename(link))
-  download.file(link, temp, headers = list(
-    Authorization=authorization
-  ))
-  unzip(temp, exdir=temp_fol)
-  
+  unzip(fname, exdir=temp_fol)
   data <- parse_downloaded_zip(temp_fol, subfolder)
-  
-  unlink(temp)
-  unlink(temp_fol)
   
   return(data)
 }
@@ -61,12 +63,12 @@ get_data_from_url <- function(link, subfolder, authorization = "Basic YXJpZWxAc2
 ###############################
 # Parse Data
 ###############################
-country_codes = read_csv("./data/01_processed/country_codes.csv")
+country_codes = read_csv("./data/00_raw/country_codes.csv")
 
 bind_rows(
   get_data_from_url(
-    "https://www.mortality.org/hmd/zip/by_statistic/lt_male.zip", 
-    "mltper_1x1"
+    link="https://www.mortality.org/hmd/zip/by_statistic/lt_male.zip", 
+    subfolder="mltper_1x1"
   ) %>% mutate(Gender = "Male"),
   get_data_from_url(
     "https://www.mortality.org/hmd/zip/by_statistic/lt_female.zip", 
@@ -78,9 +80,9 @@ bind_rows(
   dataset
 
 dataset %>% filter( Year == 2011 ) %>% 
-  write_csv("./data/01_processed/2011_qx_data.csv")
+  write_csv("./data/00_raw/2011_qx_data.csv")
 
 dataset %>% 
-  write_csv("./data/01_processed/full_qx_data.csv")
+  write_csv("./data/00_raw/full_qx_data.csv")
 
 
