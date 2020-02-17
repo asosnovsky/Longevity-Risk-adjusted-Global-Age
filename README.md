@@ -1,5 +1,5 @@
 # Mortality-Adj-Bio-Age-Around-the-world
-Implementation of Moshe A. Milvesky's paper "Calibrating Gompertz in Reverse: Mortality Adjusted Biological Age around the World"
+Implementation of "Calibrating Gompertz in Reverse: What is Your Longevity-Risk-adjusted Global Age", By: Moshe A. Milevsky
 
 # Prerequisite
 
