@@ -49,7 +49,7 @@ get_data_from_url <- function(link, subfolder, authorization = "Basic YXJpZWxAc2
   }
   
   print(paste0("Please select where you downloaded `", basename(link), "` to? "))
-  fname <- file.choose()x
+  fname <- file.choose()
   if (tolower(tools::file_ext(fname)) != "zip") {
     stop("Invalif File Type")
   }

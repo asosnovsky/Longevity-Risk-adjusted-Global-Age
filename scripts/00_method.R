@@ -116,7 +116,7 @@ compute_stage3 <- function(stage2_model) stage2_model %>%
     LRAG_Age_Lower = LRAG_age(x_lower, Age, g, G, LMD, l_m, l_lower)
   ) %>%
   select(
-    -c(x_higher, x_lower, l_higher, l_lower)
+    -c(x_higher, x_lower, l_higher, l_lower, model)
   )
 
 ## Section 3 - "Prettifying Functions"

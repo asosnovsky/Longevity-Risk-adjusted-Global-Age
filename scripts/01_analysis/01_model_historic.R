@@ -1,9 +1,9 @@
 #############################
 # This files runs the analysis for
-# data between the years of 1900 to 2011
+# data between the years of 1945 to 2011
 # I included the ability to this on multiple cpu-cores
 # However the default will only use 1-cpu core to aviod complexity
-# (to use multiple cpu-cores change the function in line 55 %do% to %dopar% and set the value
+# (to use multiple cpu-cores change the function in line 58 %do% to %dopar% and set the value
 #  on line 40 in the function registerDoMC to the number of cpus in your machine
 #  please do not run anything on your computer while its running like this!!)
 #
@@ -27,7 +27,7 @@ dataset <- read_csv("./data/00_raw/full_qx_data.csv")
 dataset %>%
   # Filter dataset to expected range
   filter(between(Age, 35, 95)) %>%
-  filter(between(Year, 1900, 2011)) %>%
+  filter(between(Year, 1945, 2011)) %>%
   # Remove cases where qx == 0
   filter(qx > 0) %>%
   # Remove null cases
@@ -47,13 +47,15 @@ grps = fdataset %>% distinct(Country, Year)
 
 # Fit model
 save_data_path = "./data/01_models/historic_stage1/"
-clear_folder(save_data_path)
+if (tolower(substr(readline(paste0("would you like to remove the older files? (y/N): ")), 0, 1)) == "y") {
+  clear_folder(save_data_path) 
+}
 out = foreach(
   i = 1:nrow(grps), 
   .errorhandling='pass', 
   .verbose=T, 
   .combine = c
-) %do% {
+) %dopar% {
   save_path = paste0(
     save_data_path, 
     grps[i,]$Country, "-",

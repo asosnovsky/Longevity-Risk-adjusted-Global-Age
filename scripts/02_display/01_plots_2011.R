@@ -13,9 +13,9 @@ library(scales)
 source("./scripts/00_method.R")
 
 # Read in the modelled data
-Stage1_model <- read_rds("./data/01_models/stage1.rds")%>% filter( Gender != "Total" )
-Stage2_model <- read_rds("./data/01_models/stage2.rds")%>% filter( Gender != "Total" )
-Stage3_model <- read_rds("./data/01_models/stage3.rds")%>% filter( Gender != "Total" )
+Stage1_model <- read_rds("./data/01_models/stage1.rds") %>% filter( Gender != "Total" )
+Stage2_model <- read_rds("./data/01_models/stage2.rds") %>% filter( Gender != "Total" )
+Stage3_model <- read_rds("./data/01_models/stage3.rds") %>% filter( Gender != "Total" )
 
 dir_save = "images/"
 

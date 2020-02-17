@@ -133,35 +133,3 @@ joined_data %>% group_by(Gender) %>%
       coord_flip() 
   )
 
-
-joined_data %>%
-  group_by(`Country Name`, Gender) %>%
-  summarise(
-    `K0 Std.Error` = unique(`K0 Std.Error`),
-    `K1 Std.Error` = unique(`K1 Std.Error`),
-    `Country Residual` = unique(`Country Residual`),
-    `Age Residual (Mean)` = mean(`Age Residual`),
-    `Age Residual (Median)` = median(`Age Residual`),
-  ) %>%
-  group_by(Gender) %>% summarise(
-    `Cor[err(K0),ej]` = cor(`K0 Std.Error`, `Country Residual`),
-    `Cor[err(K1),ej]` = cor(`K0 Std.Error`, `Country Residual`),
-    `Cor[mean(eij),ej]` = cor(`Age Residual (Mean)`, `Country Residual`),
-    `Cor[median(eij),ej]` = cor(`Age Residual (Median)`, `Country Residual`)
-  ) %>%
-  left_join(
-    joined_data %>%
-      group_by(Gender) %>% summarise(
-        `Cor[eij,ej]` = scales::scientific(cor(`Age Residual`, `Country Residual`)),
-        `Cor[err(K0),err(C0)]` = cor(`C0 Std.Error`, `K0 Std.Error`),
-        `Cor[err(K1),err(C0)]` = cor(`C0 Std.Error`, `K1 Std.Error`),
-        `Cor[err(K0),err(C1)]` = cor(`C1 Std.Error`, `K0 Std.Error`),
-        `Cor[err(K1),err(C1)]` = cor(`C1 Std.Error`, `K1 Std.Error`)
-      ),
-    by="Gender"
-  ) %>% 
-  mutate_if(is.numeric, ~round(., 4)) %>%
-  group_by(Gender) %>%
-  gather(Stat, Value, -c(Gender)) %>%
-  spread(Gender, Value) %>% 
-  write_csv("images/errors/correlations.csv")

@@ -33,4 +33,4 @@ prep_data1945 %>%
   prep_display_data_stage1 %>%
   filter( stat %in% c('b', 'm') ) %>% pretty_names_s1 %>%
   history_plot("Figure 5a: Historic Gompertz Coefficients", x_breaks = 5, no_title = T) %>%
-  save_plots("images/figure-5/f5a-historic_gompertz-1945")
+  save_plots("images/figure-5/f5a/f5a-historic_gompertz-1945")
