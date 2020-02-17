@@ -27,7 +27,7 @@ dataset <- read_csv("./data/00_raw/full_qx_data.csv")
 dataset %>%
   # Filter dataset to expected range
   filter(between(Age, 35, 95)) %>%
-  filter(between(Year, 1947, 2011)) %>%
+  filter(between(Year, 1900, 2011)) %>%
   # Remove cases where qx == 0
   filter(qx > 0) %>%
   # Remove null cases
