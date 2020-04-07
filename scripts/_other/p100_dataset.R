@@ -30,24 +30,33 @@ dt %>% write_rds("data/00_raw/p100/00_raw.rds")
 #################################################
 # Stage One - Estimating Sub-Group Parameters
 #################################################
-Stage1_model <- dt %>% group_by(Country_ID, Gender) %>% compute_stage1()
+if(file.exists("data/01_models/p100/Stage1_model.rds")) {
+  Stage1_model = read_rds("data/01_models/p100/Stage1_model.rds")  
+} else {
+  Stage1_model <- dt %>% group_by(Country_ID, Gender) %>% compute_stage1()
+  Stage1_model %>% write_rds("data/01_models/p100/Stage1_model.rds")
+}
 
-Stage1_model %>% write_rds("data/01_models/p100/Stage1_model.rds")
-#Stage1_model = read_rds("data/01_models/p100/Stage1_model.rds")
 #################################################
 # Stage Two - CLaM
 #################################################
-Stage1_model %>% group_by(Gender) %>% compute_stage2 -> Stage2_model
+if(file.exists("data/01_models/p100/Stage2_model.rds")) {
+  Stage2_model = read_rds("data/01_models/p100/Stage2_model.rds")
+}else{
+  Stage1_model %>% group_by(Gender) %>% compute_stage2 -> Stage2_model
+  Stage2_model %>% write_rds("data/01_models/p100/Stage2_model.rds")
+}
 
-Stage2_model %>% write_rds("data/01_models/p100/Stage2_model.rds")
-#Stage2_model = read_rds("data/01_models/p100/Stage2_model.rds")
 #################################################
 # Stage Three+Four - Compute B-Age
 #################################################
-Stage2_model %>% compute_stage3 -> Stage3_model
+if(file.exists("data/01_models/p100/Stage3_model.rds")) {
+  Stage3_model = read_rds("data/01_models/p100/Stage3_model.rds")
+}else{
+  Stage2_model %>% compute_stage3 -> Stage3_model
+  Stage3_model %>% write_rds("data/01_models/p100/Stage3_model.rds")
+}
 
-Stage3_model %>% write_rds("data/01_models/p100/Stage3_model.rds")
-#Stage3_model = read_rds("data/01_models/p100/Stage3_model.rds")
 
 #################################################
 # Displays
@@ -177,3 +186,17 @@ save_plots(
     theme(plot.title = element_text(hjust = 0.5)),
   "images/p100/f3b/p100-fig3b-lnh_vs_g-male"
 )
+
+Stage3_model %>% select(Country_ID, Age, Gender, LRAG_Age) %>% 
+  filter( Age == 55 ) %>% 
+  group_by(Gender) %>%
+  save_plots_by_group(
+    name='images/p100/f13.5',
+    just_plot=F,
+    exts=c('.eps'),
+    plot_fcn = function(d, k) d %>%
+      ggplot() + 
+      geom_point(aes(x=LRAG_Age, y=Country_ID), size=0.5) +
+      geom_vline(xintercept=55, linetype=3) +
+      labs(x="LARG Age", y="Income Percentile", title=paste0(k, " Chronological Age 55"))
+  )
