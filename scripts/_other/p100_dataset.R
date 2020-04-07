@@ -198,5 +198,5 @@ Stage3_model %>% select(Country_ID, Age, Gender, LRAG_Age) %>%
       ggplot() + 
       geom_point(aes(x=LRAG_Age, y=Country_ID), size=0.5) +
       geom_vline(xintercept=55, linetype=3) +
-      labs(x="LARG Age", y="Income Percentile", title=paste0(k, " Chronological Age 55"))
+      labs(x="LRAG Age", y="Income Percentile", title=paste0(k, " Chronological Age 55"))
   )
